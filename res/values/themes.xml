@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<style name="titlebarTheme" parent="android:Theme">
+<item name="android:windowTitleSize">40dip</item>
+<item name="android:windowTitleBackgroundStyle">@style/WindowTitleBackground1</item>
+</style>
+</resources>
