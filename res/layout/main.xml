@@ -1,35 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-	<EditText 
-		android:id="@+id/comicid"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    android:inputType="number"
-	    android:layout_margin="10dip"
-	    android:layout_alignParentTop="true"
-	    />
-	<Button
-		android:id="@+id/submit"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:text="submit"
-		android:layout_margin="dip"
-		android:layout_below="@+id/comicid"
-	/>
-	<ScrollView
-		android:layout_width="fill_parent"
-    	android:layout_height="wrap_content"
-    	android:layout_below="@+id/submit"
-	>
-		<ImageView
-			android:id="@+id/result"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:singleLine="false"
-		/>
-	</ScrollView>
-</RelativeLayout>
+    <RelativeLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    >
+    	<ImageButton
+    		android:id="@+id/intro"
+    		android:layout_width="fill_parent"
+	    	android:layout_height="wrap_content"
+	    	android:layout_alignParentTop="true"
+    	/>
+    </RelativeLayout>
+</ScrollLayout>

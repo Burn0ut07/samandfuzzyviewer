@@ -36,12 +36,6 @@ public class ComicViewer extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-
-		comicID = (EditText) findViewById(R.id.comicid);
-		submit = (Button) findViewById(R.id.submit);
-		results = (ImageView) findViewById(R.id.result);
-
-		submit.setOnClickListener(this);
 	}
 
 	@Override
