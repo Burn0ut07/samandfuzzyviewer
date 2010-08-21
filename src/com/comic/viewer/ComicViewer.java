@@ -1,3 +1,6 @@
+/**
+ * @author Yixin Zhu
+ */
 package com.comic.viewer;
 
 import java.io.InputStream;
@@ -19,7 +22,7 @@ import android.widget.ViewFlipper;
 public class ComicViewer extends Activity implements OnClickListener {
 	private ProgressDialog loadingDialog;
 	private ViewFlipper viewFlipper;
-	private Button start, back, mainMenu, next, last;
+	private Button first, back, mainMenu, next, last;
 	private int firstVolPage, lastVolPage, currentPage;
 	private ImageView currentImage;
 	@Override
@@ -42,8 +45,8 @@ public class ComicViewer extends Activity implements OnClickListener {
 	public void setup(){
 		//get instances of xml objects and set listeners
 		viewFlipper = (ViewFlipper) findViewById(R.id.ViewFlipper);
-		start = (Button) findViewById(R.id.start);
-		start.setOnClickListener(this);
+		first = (Button) findViewById(R.id.start);
+		first.setOnClickListener(this);
 		back = (Button) findViewById(R.id.back);
 		back.setOnClickListener(this);
 		mainMenu = (Button) findViewById(R.id.mainmenu);
@@ -74,7 +77,12 @@ public class ComicViewer extends Activity implements OnClickListener {
 		    z_filled = "0" + z_filled;
 		return z_filled;
 	}
-
+	
+	/**
+	 * gets the image at the given string url
+	 * @param imageURL the url to fetch image
+	 * @return the image in the form of drawable
+	 */
 	private Drawable getImage(String imageURL){
 		try{
 			InputStream is = (InputStream) new URL(imageURL).getContent();
@@ -84,8 +92,12 @@ public class ComicViewer extends Activity implements OnClickListener {
 		}
 		return null;
 	}
-	
+	/**
+	 * sets up the initial view, called when launched from main menu
+	 */
 	private void setupInitialView() {
+		first.setClickable(false);
+		back.setClickable(false);
 		currentPage = firstVolPage;
 		currentImage = new ImageView(this);
 		currentImage.setBackgroundDrawable(getImage(Globals.StartImageURL + 
@@ -94,11 +106,76 @@ public class ComicViewer extends Activity implements OnClickListener {
 		viewFlipper.showNext();
 	}
 	
-	@Override
-	public void onClick(View v) {
-
+	private void displayNewView(){
+		adjustControls();
+		currentImage.setBackgroundDrawable(getImage(Globals.StartImageURL + 
+				zfill(currentPage, Globals.numZeros) + Globals.EndImageURL));
+		viewFlipper.removeAllViews();
+		viewFlipper.addView(currentImage);
+		viewFlipper.showNext();
 	}
 
+	@Override
+	public void onClick(View v) {
+		if (v == next){
+			setupNextView();
+		} else if (v == back){
+			setupPrevView();
+		} else if (v == first){
+			setupFirstView();
+		} else if (v == last){
+			setupLastView();
+		} else if (v == mainMenu){
+			finish();
+		}
+	}
+
+	private void setupNextView(){
+		++currentPage;
+		displayNewView();
+	}
+	
+	private void setupPrevView(){
+		--currentPage;
+		displayNewView();
+	}
+	
+	private void setupFirstView() {
+		currentPage = firstVolPage;
+		displayNewView();
+	}
+	
+	private void setupLastView() {
+		currentPage = lastVolPage;
+		displayNewView();
+	}
+	/**
+	 * adjusts the clickable controls based on displayed page
+	 */
+	private void adjustControls(){
+		if (currentPage > firstVolPage && currentPage < lastVolPage){
+			first.setClickable(true);
+			back.setClickable(true);
+			next.setClickable(true);
+			last.setClickable(true);
+		} else if (currentPage == firstVolPage){
+			first.setClickable(false);
+			back.setClickable(false);
+			next.setClickable(true);
+			last.setClickable(true);
+		} else if (currentPage == lastVolPage){
+			first.setClickable(true);
+			back.setClickable(true);
+			next.setClickable(false);
+			last.setClickable(false);
+		} else {
+			first.setClickable(false);
+			back.setClickable(false);
+			next.setClickable(false);
+			last.setClickable(false);
+		}
+	}
+	
 	/*private void getHTTPSource(String url) {
 		HttpClient client = new DefaultHttpClient();
 		HttpGet request = new HttpGet(url);

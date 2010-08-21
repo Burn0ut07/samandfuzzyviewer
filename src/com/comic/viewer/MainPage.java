@@ -1,3 +1,6 @@
+/**
+ * @author Yixin Zhu
+ */
 package com.comic.viewer;
 
 import java.io.InputStream;

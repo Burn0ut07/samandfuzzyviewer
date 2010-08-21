@@ -1,3 +1,6 @@
+/**
+ * @author Yixin Zhu
+ */
 package com.comic.globals;
 
 public class Globals {
