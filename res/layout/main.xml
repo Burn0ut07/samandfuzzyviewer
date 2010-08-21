@@ -1,18 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-    <RelativeLayout
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-	    >
-    	<ImageButton
-    		android:id="@+id/intro"
-    		android:layout_width="fill_parent"
-	    	android:layout_height="wrap_content"
-	    	android:layout_alignParentTop="true"
-    	/>
-    </RelativeLayout>
-</ScrollLayout>
+    <HorizontalScrollView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+	    <RelativeLayout
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:background="#FFFFFF"
+		    >
+	    	<ImageButton
+	    		android:id="@+id/intro"
+	    		android:layout_width="fill_parent"
+		    	android:layout_height="wrap_content"
+		    	android:layout_alignParentTop="true"
+		    	android:adjustViewBounds="true"
+		    	android:background="#FFFFFF"
+	    	/>
+	    	<Button
+	    		android:id="@+id/volfive"
+	    		android:layout_width="wrap_content"
+		    	android:layout_height="wrap_content"
+		    	android:layout_below="@+id/intro"
+		    	android:layout_centerInParent="true"
+		    	android:background="#FFFFFF"
+		    	android:singleLine="false"
+		    	android:textColor="#000000"
+		    	android:text="Volume Five\nSam and Fuzzy Fix Your Problem!"
+		    	android:drawableRight="@drawable/vol5image"
+	    	/>
+	    	<Button
+	    		android:id="@+id/volone"
+	    		android:layout_width="wrap_content"
+		    	android:layout_height="wrap_content"
+		    	android:layout_below="@+id/volfive"
+		    	android:layout_centerInParent="true"
+		    	android:background="#FFFFFF"
+		    	android:singleLine="false"
+		    	android:textColor="#000000"
+		    	android:text="Volume One\nTaxi-Cab of Dreams"
+		    	android:drawableRight="@drawable/vol1image"
+	    	/>
+	    </RelativeLayout>
+    </HorizontalScrollView>
+</ScrollView>
