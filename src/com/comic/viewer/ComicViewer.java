@@ -1,43 +1,66 @@
 package com.comic.viewer;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
+import com.comic.globals.Globals;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 public class ComicViewer extends Activity implements OnClickListener {
-	private final String startURL = "http://www.smbc-comics.com/index.php?db=comics&id=";
-	private String comicNumber = "";
-	private final String endURL = "#comic";
-	private EditText comicID;
-	private Button submit;
-	private ImageView results;
 	private ProgressDialog loadingDialog;
-
+	private ViewFlipper viewFlipper;
+	private Button start, back, mainMenu, next, last;
+	private int firstVolPage, lastVolPage, currentPage;
+	private ImageView currentImage;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		//set custom title bar
+		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.main);
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
+				R.layout.comicviewertitlebar);
+		setup(); //sets up objects in view
+		//get volume range
+		Bundle bundle = getIntent().getExtras();
+		//sets the range of this volume
+		setThisVolumeRange((String) bundle.getString("volumeRange"));
+		setupInitialView();
 	}
-	
+
+	public void setup(){
+		//get instances of xml objects and set listeners
+		viewFlipper = (ViewFlipper) findViewById(R.id.ViewFlipper);
+		start = (Button) findViewById(R.id.start);
+		start.setOnClickListener(this);
+		back = (Button) findViewById(R.id.back);
+		back.setOnClickListener(this);
+		mainMenu = (Button) findViewById(R.id.mainmenu);
+		mainMenu.setOnClickListener(this);
+		next = (Button) findViewById(R.id.next);
+		next.setOnClickListener(this);
+		last = (Button) findViewById(R.id.current);
+		last.setOnClickListener(this);
+	}
+	/**
+	 * calculates the range for this specific volume
+	 * @param range: the specified range in String format
+	 */
+	public void setThisVolumeRange(String range){
+		firstVolPage = Integer.valueOf(range.substring(0, range.indexOf("-"))).intValue();
+		lastVolPage = Integer.valueOf(range.substring(range.indexOf("-") + 1)).intValue();
+	}
 	/**
 	 * Left pads a number with zeros
 	 * 
@@ -52,19 +75,31 @@ public class ComicViewer extends Activity implements OnClickListener {
 		return z_filled;
 	}
 
+	private Drawable getImage(String imageURL){
+		try{
+			InputStream is = (InputStream) new URL(imageURL).getContent();
+			return Drawable.createFromStream(is, "Sam and Fuzzy");
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	private void setupInitialView() {
+		currentPage = firstVolPage;
+		currentImage = new ImageView(this);
+		currentImage.setBackgroundDrawable(getImage(Globals.StartImageURL + 
+				zfill(currentPage, Globals.numZeros) + Globals.EndImageURL));
+		viewFlipper.addView(currentImage);
+		viewFlipper.showNext();
+	}
+	
 	@Override
 	public void onClick(View v) {
-		if (v == submit) {
-			showLoading();
-			comicNumber = comicID.getText().toString();
-			if (comicNumber.trim().equals("") || comicNumber.trim().equals(" ")) {
-				return;
-			}
-			getHTTPSource(startURL + comicNumber + endURL);
-		}
+
 	}
 
-	private void getHTTPSource(String url) {
+	/*private void getHTTPSource(String url) {
 		HttpClient client = new DefaultHttpClient();
 		HttpGet request = new HttpGet(url);
 		HttpResponse response;
@@ -95,18 +130,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-	
-	private void displayImage(String imageURL){
-		try{
-			InputStream is = (InputStream) new URL(imageURL).getContent();
-			Drawable image = Drawable.createFromStream(is, "comic image from SMBC");
-			results.setImageDrawable(image);
-			doneLoading();
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-	}
+	}*/
 
 	public void showLoading() {
 		loadingDialog = ProgressDialog

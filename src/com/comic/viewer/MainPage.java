@@ -6,6 +6,7 @@ import java.net.URL;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
@@ -38,6 +39,30 @@ public class MainPage extends ListActivity {
 		setContentView(R.layout.main);
 		setListAdapter(new ListVolumesAdapter(this));
 	}
+	public void launchVolume(int volumeNameIndex){
+		Intent i = new Intent(this, ComicViewer.class);
+		switch (volumeNameIndex){
+			case 0:
+				i.putExtra("volumeRange", Globals.ZeroRange);
+				break;
+			case 1:
+				i.putExtra("volumeRange", Globals.OneRange);
+				break;
+			case 2:
+				i.putExtra("volumeRange", Globals.TwoRange);
+				break;
+			case 3:
+				i.putExtra("volumeRange", Globals.ThreeRange);
+				break;
+			case 4:
+				i.putExtra("volumeRange", Globals.FourRange);
+				break;
+			case 5:
+				i.putExtra("volumeRange", Globals.FiveRange);
+				break;
+		}
+		startActivity(i);
+	}
 	class ListVolumesAdapter extends BaseAdapter implements Filterable {
 		private LayoutInflater mInflater;
 		private Context context;
@@ -47,13 +72,6 @@ public class MainPage extends ListActivity {
 			mInflater = LayoutInflater.from(context);
 			this.context = context;
 		}
-
-		/**
-		 * Make a view to hold each row.
-		 * 
-		 * @see android.widget.ListAdapter#getView(int, android.view.View,
-		 *      android.view.ViewGroup)
-		 */
 		public View getView(final int position, View convertView,
 				ViewGroup parent) {
 			// A ViewHolder keeps references to children views to avoid
@@ -78,11 +96,8 @@ public class MainPage extends ListActivity {
 					private int pos = position;
 
 					public void onClick(View v) {
-						// Toast.makeText(context, "Click-" +
-						// String.valueOf(pos), Toast.LENGTH_SHORT).show();
-						//getSurveysFromPyramid(merchlist.get(pos));
-						
-						//TODO: display proper image
+						//launch correct volume
+						launchVolume(position);
 					}
 				});
 				convertView.setTag(holder);
@@ -100,7 +115,6 @@ public class MainPage extends ListActivity {
 		class ViewHolder {
 			TextView volumeName;
 			TextView volumeDescription;
-
 		}
 
 		public Filter getFilter() {
@@ -119,7 +133,6 @@ public class MainPage extends ListActivity {
 		}
 
 		public Object getItem(int position) {
-			// TODO Auto-generated method stub
 			return volumeNames[position];
 		}
 

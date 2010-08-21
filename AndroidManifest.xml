@@ -11,7 +11,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-		<activity android:name="ComicViewer"/>
+		<activity android:name="ComicViewer"
+		android:theme="@style/titlebarTheme"/>
     </application>
 
 <uses-permission android:name="android.permission.INTERNET" /> 
