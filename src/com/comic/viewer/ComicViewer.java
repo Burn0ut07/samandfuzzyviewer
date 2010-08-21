@@ -37,6 +37,20 @@ public class ComicViewer extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 	}
+	
+	/**
+	 * Left pads a number with zeros
+	 * 
+	 * @param num The number to pad with zeros
+	 * @param zeros The amount of zeros to pad the number with
+	 * @return A String with the number properly padded
+	 */
+	public static String zfill(int num, int zeros) {
+		String n = String.valueOf(num), z_filled = n;
+		for(int i = 0; i < (zeros - n.length()); i++)
+		    z_filled = "0" + z_filled;
+		return z_filled;
+	}
 
 	@Override
 	public void onClick(View v) {
