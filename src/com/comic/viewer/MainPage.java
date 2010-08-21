@@ -25,7 +25,6 @@ import android.widget.TextView;
 
 import com.comic.globals.Globals;
 
-
 public class MainPage extends ListActivity {
 	private String[] volumeNames = {Globals.VolFiveName, 
 			Globals.VolFourName, Globals.VolThreeName, 

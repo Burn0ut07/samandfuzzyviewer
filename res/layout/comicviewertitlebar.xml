@@ -1,50 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-	<RelativeLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:fitsSystemWindows="true"
-	>
-	    <Button
-	        android:id="@+id/start"
-	        android:layout_width="wrap_content"
-	        android:layout_height="fill_parent"
-	        android:text="Start"
-	        android:layout_marginTop="2dip"
-	        android:layout_alignParentLeft="true"
-	        />
-	    <Button
-	        android:id="@+id/back"
-	        android:layout_width="wrap_content"
-	        android:layout_height="fill_parent"
-	        android:text="Back"
-	        android:layout_marginTop="2dip"
-	        android:layout_toRightOf="@+id/start"
-	        />
-		
-	    <Button 
-		    android:layout_centerInParent="true" 
-		    android:layout_width="wrap_content" 
-		    android:text="Main Menu" 
-		    android:id="@+id/mainmenu" 
-		    android:layout_height="fill_parent"
-		    android:layout_marginTop="2dip"
-	    	/>
-	    <Button
-	        android:id="@+id/current"
-	        android:layout_width="wrap_content"
-	        android:layout_height="fill_parent"
-	        android:layout_alignParentRight="true"
-	        android:layout_marginTop="2dip"
-	        android:text="Last"
-	    	/>
-		<Button 
-			android:layout_toLeftOf="@+id/current" 
-			android:layout_width="wrap_content" 
-			android:text="Next" 
-			android:id="@+id/next" 
-			android:layout_height="fill_parent"
-			android:layout_marginTop="2dip"
-			/>
+<RelativeLayout android:id="@+id/RelativeLayout01"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	xmlns:android="http://schemas.android.com/apk/res/android">
+	<TableLayout android:id="@+id/TableLayout01"
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+      	android:layout_centerHorizontal="true">
+		<TableRow android:layout_below="@+id/TableLayout01"
+			android:id="@+id/TableRow01" android:layout_height="wrap_content"
+			android:layout_width="wrap_content" android:fitsSystemWindows="true">
+			<Button android:id="@+id/start" android:text="First"
+				android:layout_height="fill_parent" android:layout_below="@+id/TableLayout01"
+				android:layout_width="wrap_content" />
+			<Button android:id="@+id/back" android:text="Back"
+				android:layout_height="fill_parent" android:layout_toRightOf="@+id/Button01"
+				android:layout_below="@+id/TableLayout01" android:layout_width="wrap_content" />
+			<Button android:id="@+id/mainmenu" android:text="Main Menu"
+				android:layout_height="fill_parent" android:layout_toRightOf="@+id/Button02"
+				android:layout_below="@+id/TableLayout01" android:layout_width="wrap_content" />
+			<Button android:id="@+id/next" android:text="Next"
+				android:layout_height="fill_parent" android:layout_toRightOf="@+id/Button03"
+				android:layout_below="@+id/TableLayout01" android:layout_width="wrap_content" />
+			<Button android:id="@+id/current" android:text="Last"
+				android:layout_height="fill_parent" android:layout_toRightOf="@+id/Button04"
+				android:layout_below="@+id/TableLayout01" android:layout_width="wrap_content" />
+		</TableRow>
+	</TableLayout>
+
+
+
+
+
 
 </RelativeLayout>
