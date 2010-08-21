@@ -28,7 +28,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 		
 		//set custom title bar
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
-		setContentView(R.layout.main);
+		setContentView(R.layout.comicviewer);
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
 				R.layout.comicviewertitlebar);
 		setup(); //sets up objects in view

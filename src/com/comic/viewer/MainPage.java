@@ -42,22 +42,22 @@ public class MainPage extends ListActivity {
 	public void launchVolume(int volumeNameIndex){
 		Intent i = new Intent(this, ComicViewer.class);
 		switch (volumeNameIndex){
-			case 0:
+			case 5:
 				i.putExtra("volumeRange", Globals.ZeroRange);
 				break;
-			case 1:
+			case 4:
 				i.putExtra("volumeRange", Globals.OneRange);
 				break;
-			case 2:
+			case 3:
 				i.putExtra("volumeRange", Globals.TwoRange);
 				break;
-			case 3:
+			case 2:
 				i.putExtra("volumeRange", Globals.ThreeRange);
 				break;
-			case 4:
+			case 1:
 				i.putExtra("volumeRange", Globals.FourRange);
 				break;
-			case 5:
+			case 0:
 				i.putExtra("volumeRange", Globals.FiveRange);
 				break;
 		}
