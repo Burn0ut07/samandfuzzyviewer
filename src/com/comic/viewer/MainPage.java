@@ -3,35 +3,29 @@
  */
 package com.comic.viewer;
 
-import java.io.InputStream;
-import java.net.URL;
-
-import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.comic.globals.Globals;
 
 public class MainPage extends ListActivity {
+	//list of volume names
 	private String[] volumeNames = {Globals.VolFiveName, 
 			Globals.VolFourName, Globals.VolThreeName, 
 			Globals.VolTwoName, Globals.VolOneName, Globals.VolZeroName};
+	//list of volume info
 	private String[] volumeInfo = {Globals.VolFiveInfo, 
 			Globals.VolFourInfo, Globals.VolThreeInfo, 
 			Globals.VolTwoInfo, Globals.VolOneInfo, Globals.VolZeroInfo};
@@ -41,7 +35,12 @@ public class MainPage extends ListActivity {
 		setContentView(R.layout.main);
 		setListAdapter(new ListVolumesAdapter(this));
 	}
+	/**
+	 * launches the corresponding volume based on user selection
+	 * @param volumeNameIndex: the index of user selection
+	 */
 	public void launchVolume(int volumeNameIndex){
+		Toast.makeText(this, "Beginning Volume- "+ (5 - volumeNameIndex), 1000).show();
 		Intent i = new Intent(this, ComicViewer.class);
 		switch (volumeNameIndex){
 			case 5:
@@ -65,24 +64,27 @@ public class MainPage extends ListActivity {
 		}
 		startActivity(i);
 	}
+	
+	@Override
+	protected void onListItemClick(ListView l, View v, int position,long id){
+		launchVolume(position); //perform action based on user click
+	}
+	
+	/**
+	 * Custom adapter for custom list view
+	 * @author yixinzhu
+	 *
+	 */
 	class ListVolumesAdapter extends BaseAdapter implements Filterable {
 		private LayoutInflater mInflater;
-		private Context context;
 
 		public ListVolumesAdapter(Context context) {
 			// Cache the LayoutInflate to avoid asking for a new one each time.
 			mInflater = LayoutInflater.from(context);
-			this.context = context;
 		}
 		public View getView(final int position, View convertView,
 				ViewGroup parent) {
-			// A ViewHolder keeps references to children views to avoid
-			// unneccessary calls to findViewById() on each row.
 			ViewHolder holder;
-			// When convertView is not null, we can reuse it directly, there is
-			// no need to reinflate it. We only inflate a new View when the
-			// convertView
-			// supplied by ListView is null.
 			if (convertView == null) {
 				convertView = mInflater.inflate(R.layout.main_context,
 						null);
@@ -93,15 +95,6 @@ public class MainPage extends ListActivity {
 						.findViewById(R.id.volumeName);
 				holder.volumeDescription = (TextView) convertView
 						.findViewById(R.id.volumeDiscription);
-
-				convertView.setOnClickListener(new OnClickListener() {
-					private int pos = position;
-
-					public void onClick(View v) {
-						//launch correct volume
-						launchVolume(position);
-					}
-				});
 				convertView.setTag(holder);
 			} else {
 				// Get the ViewHolder back to get fast access to the TextView
@@ -126,7 +119,7 @@ public class MainPage extends ListActivity {
 
 		public long getItemId(int position) {
 			// TODO Auto-generated method stub
-			return 0;
+			return position;
 		}
 
 		public int getCount() {
@@ -135,7 +128,7 @@ public class MainPage extends ListActivity {
 		}
 
 		public Object getItem(int position) {
-			return volumeNames[position];
+			return position;
 		}
 
 	}

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <style name="WindowTitleBackground1" parent="android:WindowTitleBackground">
-        <item name="android:background">#6D6868</item>
+        <item name="android:background">#050852</item>
     </style>
 </resources>

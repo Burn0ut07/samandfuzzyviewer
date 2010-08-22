@@ -1,5 +1,5 @@
 /**
- * @author Yixin Zhu
+ * @author Yixin Zhu, Joel Jauregui
  */
 package com.comic.viewer;
 
@@ -25,25 +25,34 @@ public class ComicViewer extends Activity implements OnClickListener {
 	private Button first, back, mainMenu, next, last;
 	private int firstVolPage, lastVolPage, currentPage;
 	private WebView myWebView;
-
+	private View zoom;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		// set custom title bar
+		
+		showLoading();
+		
+		// sets up custom title bar
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.comicviewer);
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
 				R.layout.comicviewertitlebar);
-		setup(); // sets up objects in view
+		// sets up objects in view
+		setup();
 		// get volume range
 		Bundle bundle = getIntent().getExtras();
-		// sets the range of this volume
+		// sets up the range of this volume
 		setThisVolumeRange((String) bundle.getString("volumeRange"));
+		//sets up first view to display
 		setupInitialView();
 	}
 
+	/**
+	 * initial startup consisting of setting up of xml instances and zoom controls
+	 */
 	public void setup() {
+		//gets instances from xml
 		myWebView = (WebView) findViewById(R.id.webView);
 		first = (Button) findViewById(R.id.start);
 		first.setOnClickListener(this);
@@ -55,6 +64,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 		next.setOnClickListener(this);
 		last = (Button) findViewById(R.id.current);
 		last.setOnClickListener(this);
+		//sets up image display and zoom
 		myWebView.setClickable(true);
 		final Activity activity = this;
 		myWebView.setWebViewClient(new WebViewClient() {
@@ -65,7 +75,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 			}
 		});
 		myWebView.requestFocus();
-		final View zoom = this.myWebView.getZoomControls();
+		zoom = myWebView.getZoomControls();
 		zoom.setVisibility(View.VISIBLE);
 		myWebView.getSettings().setBuiltInZoomControls(true);
 	}
@@ -128,13 +138,19 @@ public class ComicViewer extends Activity implements OnClickListener {
 		myWebView.clearView();
 		myWebView.loadUrl(Globals.StartImageURL
 				+ zfill(currentPage, Globals.numZeros) + Globals.EndImageURL);
+		doneLoading();
 	}
 
+	/**
+	 * displays a new comic image to the view
+	 */
 	private void displayNewView() {
+		showLoading();
 		adjustControls();
 		myWebView.clearView();
 		myWebView.loadUrl(Globals.StartImageURL
 				+ zfill(currentPage, Globals.numZeros) + Globals.EndImageURL);
+		doneLoading();
 	}
 
 	@Override
@@ -152,21 +168,33 @@ public class ComicViewer extends Activity implements OnClickListener {
 		}
 	}
 
+	/**
+	 * setups for displaying of next immediate view
+	 */
 	private void setupNextView() {
 		++currentPage;
 		displayNewView();
 	}
 
+	/**
+	 * setups for displaying of previous immediate view
+	 */
 	private void setupPrevView() {
 		--currentPage;
 		displayNewView();
 	}
 
+	/**
+	 * setups for displaying of the first view of the volume
+	 */
 	private void setupFirstView() {
 		currentPage = firstVolPage;
 		displayNewView();
 	}
 
+	/**
+	 * setups for displaying of the last view of the volume
+	 */
 	private void setupLastView() {
 		currentPage = lastVolPage;
 		displayNewView();
@@ -215,11 +243,17 @@ public class ComicViewer extends Activity implements OnClickListener {
 		}
 	}
 
+	/**
+	 * displays loading dialog
+	 */
 	public void showLoading() {
 		loadingDialog = ProgressDialog
 				.show(this, "", "Loading. Please wait...");
 	}
 
+	/**
+	 * disables loading dialog
+	 */
 	public void doneLoading() {
 		loadingDialog.dismiss();
 	}
