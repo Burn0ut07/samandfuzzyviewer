@@ -44,9 +44,6 @@ public class ComicViewer extends Activity implements OnClickListener {
 	}
 
 	public void setup() {
-		// get instances of xml objects and set listeners
-		// viewFlipper = (ViewFlipper) findViewById(R.id.ViewFlipper);
-		// viewFlipper.requestFocus();
 		myWebView = (WebView) findViewById(R.id.webView);
 		first = (Button) findViewById(R.id.start);
 		first.setOnClickListener(this);
