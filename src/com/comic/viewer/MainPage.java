@@ -28,15 +28,18 @@ public class MainPage extends ListActivity {
 	private String[] volumeInfo = {Globals.VolFiveInfo, 
 			Globals.VolFourInfo, Globals.VolThreeInfo, 
 			Globals.VolTwoInfo, Globals.VolOneInfo, Globals.VolZeroInfo};
+	
 	@Override
-	public void onCreate(Bundle savedInstanceState){
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		setListAdapter(new ListVolumesAdapter(this));
 	}
+	
 	/**
-	 * launches the corresponding volume based on user selection
-	 * @param volumeNameIndex: the index of user selection
+	 * Launches the corresponding volume based on user selection
+	 * 
+	 * @param volumeNameIndex The index of the user selection
 	 */
 	public void launchVolume(int volumeNameIndex){
 		Toast.makeText(this, "Beginning Volume- "+ (5 - volumeNameIndex), 1000).show();
@@ -71,8 +74,8 @@ public class MainPage extends ListActivity {
 	
 	/**
 	 * Custom adapter for custom list view
-	 * @author yixinzhu
-	 *
+	 * 
+	 * @author Yixin Zhu
 	 */
 	class ListVolumesAdapter extends BaseAdapter implements Filterable {
 		private LayoutInflater mInflater;
@@ -81,8 +84,8 @@ public class MainPage extends ListActivity {
 			// Cache the LayoutInflate to avoid asking for a new one each time.
 			mInflater = LayoutInflater.from(context);
 		}
-		public View getView(final int position, View convertView,
-				ViewGroup parent) {
+		
+		public View getView(final int position, View convertView, ViewGroup parent) {
 			ViewHolder holder;
 			if (convertView == null) {
 				convertView = mInflater.inflate(R.layout.main_context,
@@ -101,8 +104,7 @@ public class MainPage extends ListActivity {
 				holder = (ViewHolder) convertView.getTag();
 			}
 			holder.volumeName.setText(volumeNames[position]);
-			holder.volumeDescription
-					.setText(volumeInfo[position]);
+			holder.volumeDescription.setText(volumeInfo[position]);
 			return convertView;
 		}
 

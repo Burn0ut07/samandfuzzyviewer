@@ -57,7 +57,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * initial startup consisting of setting up of xml instances and zoom controls
+	 * Initial startup consisting of setting up of xml instances and zoom controls
 	 */
 	public void setup() {
 		//gets instances from xml
@@ -91,8 +91,8 @@ public class ComicViewer extends Activity implements OnClickListener {
 	/**
 	 * Calculates the range for this specific volume
 	 * 
-	 * @param range
-	 *            : the specified range in String format
+	 * @param range 
+	 * 				The specified range in String format
 	 */
 	public void setThisVolumeRange(String range) {
 		firstVolPage = Integer.valueOf(range.substring(0, range.indexOf("-")))
@@ -118,11 +118,11 @@ public class ComicViewer extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * gets the image at the given string url
+	 * Gets the image at the given url
 	 * 
 	 * @param imageURL
-	 *            the url to fetch image
-	 * @return the image in the form of drawable
+	 *            The url, as a String, to fetch the image from
+	 * @return The image in the form of drawable
 	 */
 	private Drawable getImage(String imageURL) {
 		try {
@@ -135,7 +135,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * sets up the initial view, called when launched from main menu
+	 * Sets up the initial view, called when launched from main menu
 	 */
 	private void setupInitialView() {
 		first.setEnabled(false);
@@ -150,7 +150,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * displays a new comic image to the view
+	 * Displays a new comic image to the view
 	 */
 	private void displayNewView() {
 		showLoading();
@@ -185,7 +185,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * setups for displaying of previous immediate view
+	 * Setups for displaying of previous immediate view
 	 */
 	private void setupPrevView() {
 		--currentPage;
@@ -193,7 +193,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * setups for displaying of the first view of the volume
+	 * Setups for displaying of the first view of the volume
 	 */
 	private void setupFirstView() {
 		currentPage = firstVolPage;
@@ -201,7 +201,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * setups for displaying of the last view of the volume
+	 * Setups for displaying of the last view of the volume
 	 */
 	private void setupLastView() {
 		currentPage = lastVolPage;
@@ -209,7 +209,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * adjusts the clickable controls based on displayed page
+	 * Adjusts the clickable controls based on displayed page
 	 */
 	private void adjustControls() {
 		if (currentPage > firstVolPage && currentPage < lastVolPage) {
@@ -260,7 +260,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * displays loading dialog
+	 * Displays loading dialog
 	 */
 	public void showLoading() {
 		loadingDialog = ProgressDialog
@@ -268,7 +268,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * disables loading dialog
+	 * Disables loading dialog
 	 */
 	public void doneLoading() {
 		loadingDialog.dismiss();

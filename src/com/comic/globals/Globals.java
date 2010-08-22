@@ -50,4 +50,8 @@ public class Globals {
 	public static final String SixRange = "1237";
 	
 	public static final int numZeros = 8;
+	
+	/** Ids for guest comics which have a different image extension than gif */
+	public static final int[] guest_img_ids = {198, 202, 206, 366, 367, 371, 374, 481, 550, 552, 553,
+		554, 557, 710, 715, 718, 894, 897, 898, 899, 900, 1202, 1203, 1205, 1207, 1208, 1209, 1211};
 }
