@@ -10,55 +10,43 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.Window;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.Toast;
-import android.widget.ViewFlipper;
 
 import com.comic.globals.Globals;
 
 public class ComicViewer extends Activity implements OnClickListener {
 	private ProgressDialog loadingDialog;
-	private ViewFlipper viewFlipper;
 	private Button first, back, mainMenu, next, last;
 	private int firstVolPage, lastVolPage, currentPage;
-	private ImageView currentImage;
 	private WebView myWebView;
-	private static final FrameLayout.LayoutParams ZOOM_PARAMS =
-		new FrameLayout.LayoutParams(
-		ViewGroup.LayoutParams.FILL_PARENT,
-		ViewGroup.LayoutParams.WRAP_CONTENT,
-		Gravity.BOTTOM);
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		//set custom title bar
+
+		// set custom title bar
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.comicviewer);
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
 				R.layout.comicviewertitlebar);
-		setup(); //sets up objects in view
-		//get volume range
+		setup(); // sets up objects in view
+		// get volume range
 		Bundle bundle = getIntent().getExtras();
-		//sets the range of this volume
+		// sets the range of this volume
 		setThisVolumeRange((String) bundle.getString("volumeRange"));
 		setupInitialView();
 	}
 
 	public void setup() {
-		//get instances of xml objects and set listeners
-		viewFlipper = (ViewFlipper) findViewById(R.id.ViewFlipper);
+		// get instances of xml objects and set listeners
+		// viewFlipper = (ViewFlipper) findViewById(R.id.ViewFlipper);
+		// viewFlipper.requestFocus();
 		myWebView = (WebView) findViewById(R.id.webView);
 		first = (Button) findViewById(R.id.start);
 		first.setOnClickListener(this);
@@ -70,69 +58,67 @@ public class ComicViewer extends Activity implements OnClickListener {
 		next.setOnClickListener(this);
 		last = (Button) findViewById(R.id.current);
 		last.setOnClickListener(this);
-		
-		/*getWindow().requestFeature(Window.FEATURE_PROGRESS);
-
-		 myWebView.getSettings().setJavaScriptEnabled(true);
-
-		 final Activity activity = this;
-		 myWebView.setWebChromeClient(new WebChromeClient() {
-		   public void onProgressChanged(WebView view, int progress) {
-		     // Activities and WebViews measure progress with different scales.
-		     // The progress meter will automatically disappear when we reach 100%
-		     activity.setProgress(progress * 1000);
-		   }
-		 });
-		 myWebView.setWebViewClient(new WebViewClient() {
-		   public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-		     Toast.makeText(activity, "Oh no! " + description, Toast.LENGTH_SHORT).show();
-		   }
-		 });*/
-		FrameLayout mContentView = (FrameLayout) getWindow().
-	    getDecorView().findViewById(android.R.id.content);
+		myWebView.setClickable(true);
+		final Activity activity = this;
+		myWebView.setWebViewClient(new WebViewClient() {
+			public void onReceivedError(WebView view, int errorCode,
+					String description, String failingUrl) {
+				Toast.makeText(activity, "Oh no! " + description,
+						Toast.LENGTH_SHORT).show();
+			}
+		});
+		myWebView.requestFocus();
 		final View zoom = this.myWebView.getZoomControls();
-	    mContentView.addView(zoom, ZOOM_PARAMS);
-	    zoom.setVisibility(View.VISIBLE);
-	    myWebView.getSettings().setBuiltInZoomControls(true);
+		zoom.setVisibility(View.VISIBLE);
+		myWebView.getSettings().setBuiltInZoomControls(true);
 	}
-	
+
 	/**
 	 * Calculates the range for this specific volume
 	 * 
-	 * @param range: the specified range in String format
+	 * @param range
+	 *            : the specified range in String format
 	 */
-	public void setThisVolumeRange(String range){
-		firstVolPage = Integer.valueOf(range.substring(0, range.indexOf("-"))).intValue();
-		lastVolPage = Integer.valueOf(range.substring(range.indexOf("-") + 1)).intValue();
+	public void setThisVolumeRange(String range) {
+		firstVolPage = Integer.valueOf(range.substring(0, range.indexOf("-")))
+				.intValue();
+		lastVolPage = Integer.valueOf(range.substring(range.indexOf("-") + 1))
+				.intValue();
 	}
+
 	/**
 	 * Left pads a number with zeros
 	 * 
-	 * @param num The number to pad with zeros
-	 * @param zeros The amount of zeros to pad the number with
+	 * @param num
+	 *            The number to pad with zeros
+	 * @param zeros
+	 *            The amount of zeros to pad the number with
 	 * @return A String with the number properly padded
 	 */
 	public static String zfill(int num, int zeros) {
 		String n = String.valueOf(num), z_filled = n;
-		for(int i = 0; i < (zeros - n.length()); i++)
-		    z_filled = "0" + z_filled;
+		for (int i = 0; i < (zeros - n.length()); i++)
+			z_filled = "0" + z_filled;
 		return z_filled;
 	}
-	
+
 	/**
 	 * gets the image at the given string url
-	 * @param imageURL the url to fetch image
+	 * 
+	 * @param imageURL
+	 *            the url to fetch image
 	 * @return the image in the form of drawable
 	 */
-	private Drawable getImage(String imageURL){
-		try{
+	private Drawable getImage(String imageURL) {
+		try {
 			InputStream is = (InputStream) new URL(imageURL).getContent();
 			return Drawable.createFromStream(is, "Sam and Fuzzy");
-		} catch (Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
+
 	/**
 	 * sets up the initial view, called when launched from main menu
 	 */
@@ -142,69 +128,58 @@ public class ComicViewer extends Activity implements OnClickListener {
 		back.setEnabled(false);
 		back.setFocusable(false);
 		currentPage = firstVolPage;
-		currentImage = new ImageView(this);
-		currentImage.setScaleType(ImageView.ScaleType.CENTER);
-		currentImage.setImageDrawable(getImage(Globals.StartImageURL + 
-				zfill(currentPage, Globals.numZeros) + Globals.EndImageURL));
-		myWebView.loadUrl(Globals.StartImageURL + 
-				zfill(currentPage, Globals.numZeros) + Globals.EndImageURL);
-		((ViewGroup)myWebView.getParent()).removeView(myWebView);
-		viewFlipper.addView(myWebView);
-		viewFlipper.showNext();
+		myWebView.clearView();
+		myWebView.loadUrl(Globals.StartImageURL
+				+ zfill(currentPage, Globals.numZeros) + Globals.EndImageURL);
 	}
-	
-	private void displayNewView(){
+
+	private void displayNewView() {
 		adjustControls();
-		currentImage.setScaleType(ImageView.ScaleType.CENTER);
-		currentImage.setImageDrawable(getImage(Globals.StartImageURL + 
-				zfill(currentPage, Globals.numZeros) + Globals.EndImageURL));
-		viewFlipper.removeAllViews();
-		myWebView.loadUrl(Globals.StartImageURL + 
-				zfill(currentPage, Globals.numZeros) + Globals.EndImageURL);
-		viewFlipper.addView(myWebView);
-		viewFlipper.showNext();
+		myWebView.clearView();
+		myWebView.loadUrl(Globals.StartImageURL
+				+ zfill(currentPage, Globals.numZeros) + Globals.EndImageURL);
 	}
 
 	@Override
 	public void onClick(View v) {
-		if (v == next){
+		if (v == next) {
 			setupNextView();
-		} else if (v == back){
+		} else if (v == back) {
 			setupPrevView();
-		} else if (v == first){
+		} else if (v == first) {
 			setupFirstView();
-		} else if (v == last){
+		} else if (v == last) {
 			setupLastView();
-		} else if (v == mainMenu){
+		} else if (v == mainMenu) {
 			finish();
 		}
 	}
 
-	private void setupNextView(){
+	private void setupNextView() {
 		++currentPage;
 		displayNewView();
 	}
-	
-	private void setupPrevView(){
+
+	private void setupPrevView() {
 		--currentPage;
 		displayNewView();
 	}
-	
+
 	private void setupFirstView() {
 		currentPage = firstVolPage;
 		displayNewView();
 	}
-	
+
 	private void setupLastView() {
 		currentPage = lastVolPage;
 		displayNewView();
 	}
-	
+
 	/**
 	 * adjusts the clickable controls based on displayed page
 	 */
-	private void adjustControls(){
-		if (currentPage > firstVolPage && currentPage < lastVolPage){
+	private void adjustControls() {
+		if (currentPage > firstVolPage && currentPage < lastVolPage) {
 			first.setEnabled(true);
 			first.setFocusable(true);
 			back.setEnabled(true);
@@ -213,7 +188,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 			next.setFocusable(true);
 			last.setEnabled(true);
 			last.setFocusable(true);
-		} else if (currentPage == firstVolPage){
+		} else if (currentPage == firstVolPage) {
 			first.setEnabled(false);
 			first.setFocusable(false);
 			back.setEnabled(false);
@@ -222,7 +197,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 			next.setFocusable(true);
 			last.setEnabled(true);
 			last.setFocusable(true);
-		} else if (currentPage == lastVolPage){
+		} else if (currentPage == lastVolPage) {
 			first.setEnabled(true);
 			first.setFocusable(true);
 			back.setEnabled(true);
@@ -242,39 +217,6 @@ public class ComicViewer extends Activity implements OnClickListener {
 			last.setFocusable(false);
 		}
 	}
-	
-	/*private void getHTTPSource(String url) {
-		HttpClient client = new DefaultHttpClient();
-		HttpGet request = new HttpGet(url);
-		HttpResponse response;
-		try {
-			response = client.execute(request);
-
-			String imageURL = "";
-			InputStream in = response.getEntity().getContent();
-			BufferedReader reader = new BufferedReader(
-					new InputStreamReader(in));
-			StringBuilder str = new StringBuilder();
-			String line = null;
-			while ((line = reader.readLine()) != null) {
-				if (line.contains("[IMG]")){
-					str.append(line.substring(line.indexOf("[IMG]")));
-					str.append(reader.readLine());
-					break;
-				}
-			}
-			in.close();
-			imageURL = str.toString();
-			imageURL = str.substring(5, str.indexOf("[/IMG]"));
-			displayImage(imageURL);
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}*/
 
 	public void showLoading() {
 		loadingDialog = ProgressDialog
