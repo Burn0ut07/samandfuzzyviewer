@@ -8,6 +8,7 @@ import java.net.URL;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
@@ -30,9 +31,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		showLoading();
-		
+
 		// sets up custom title bar
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.comicviewer);
@@ -40,12 +39,21 @@ public class ComicViewer extends Activity implements OnClickListener {
 				R.layout.comicviewertitlebar);
 		// sets up objects in view
 		setup();
-		// get volume range
-		Bundle bundle = getIntent().getExtras();
-		// sets up the range of this volume
-		setThisVolumeRange((String) bundle.getString("volumeRange"));
-		//sets up first view to display
-		setupInitialView();
+		//new instance
+		if (savedInstanceState == null){
+			showLoading();
+			// get volume range
+			Bundle bundle = getIntent().getExtras();
+			// sets up the range of this volume
+			setThisVolumeRange((String) bundle.getString("volumeRange"));
+			//sets up first view to display
+			setupInitialView();
+		} else { //destroyed and recreated
+			firstVolPage = savedInstanceState.getInt("firstVolPage");
+			lastVolPage = savedInstanceState.getInt("lastVolPage");
+			currentPage = savedInstanceState.getInt("currentPage");
+			displayNewView();
+		}
 	}
 
 	/**
@@ -241,6 +249,14 @@ public class ComicViewer extends Activity implements OnClickListener {
 			last.setEnabled(false);
 			last.setFocusable(false);
 		}
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		outState.putInt("firstVolPage", firstVolPage);
+		outState.putInt("lastVolPage", lastVolPage);
+		outState.putInt("currentPage", currentPage);
+		super.onSaveInstanceState(outState);
 	}
 
 	/**
