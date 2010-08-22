@@ -4,27 +4,21 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-	android:scrollbarAlwaysDrawHorizontalTrack="true"
-	>
+	android:scrollbarAlwaysDrawHorizontalTrack="true">
 	<ScrollView
 	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-	    >
+	    android:layout_height="fill_parent">
 	    <HorizontalScrollView
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-	  	>
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="fill_parent">
 			<ViewFlipper 
 				android:id="@+id/ViewFlipper" 
 				android:layout_width="fill_parent" 
-				android:layout_height="fill_parent"
-				>
-			</ViewFlipper>
+				android:layout_height="fill_parent"/>
 		</HorizontalScrollView>
 	</ScrollView>
 	<WebView
 	    android:id="@+id/webView"
 	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-  	/>
+	    android:layout_height="fill_parent"/>
 </LinearLayout>

@@ -12,13 +12,16 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.View.OnClickListener;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.comic.globals.Globals;
@@ -53,10 +56,10 @@ public class ComicViewer extends Activity implements OnClickListener {
 		setupInitialView();
 	}
 
-	public void setup(){
+	public void setup() {
 		//get instances of xml objects and set listeners
 		viewFlipper = (ViewFlipper) findViewById(R.id.ViewFlipper);
-		myWebView = (WebView) this.findViewById(R.id.webView);
+		myWebView = (WebView) findViewById(R.id.webView);
 		first = (Button) findViewById(R.id.start);
 		first.setOnClickListener(this);
 		back = (Button) findViewById(R.id.back);
@@ -67,14 +70,35 @@ public class ComicViewer extends Activity implements OnClickListener {
 		next.setOnClickListener(this);
 		last = (Button) findViewById(R.id.current);
 		last.setOnClickListener(this);
-		/*FrameLayout mContentView = (FrameLayout) getWindow().
+		
+		/*getWindow().requestFeature(Window.FEATURE_PROGRESS);
+
+		 myWebView.getSettings().setJavaScriptEnabled(true);
+
+		 final Activity activity = this;
+		 myWebView.setWebChromeClient(new WebChromeClient() {
+		   public void onProgressChanged(WebView view, int progress) {
+		     // Activities and WebViews measure progress with different scales.
+		     // The progress meter will automatically disappear when we reach 100%
+		     activity.setProgress(progress * 1000);
+		   }
+		 });
+		 myWebView.setWebViewClient(new WebViewClient() {
+		   public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+		     Toast.makeText(activity, "Oh no! " + description, Toast.LENGTH_SHORT).show();
+		   }
+		 });*/
+		FrameLayout mContentView = (FrameLayout) getWindow().
 	    getDecorView().findViewById(android.R.id.content);
 		final View zoom = this.myWebView.getZoomControls();
 	    mContentView.addView(zoom, ZOOM_PARAMS);
-	    myWebView.getSettings().setBuiltInZoomControls(true);*/
+	    zoom.setVisibility(View.VISIBLE);
+	    myWebView.getSettings().setBuiltInZoomControls(true);
 	}
+	
 	/**
-	 * calculates the range for this specific volume
+	 * Calculates the range for this specific volume
+	 * 
 	 * @param range: the specified range in String format
 	 */
 	public void setThisVolumeRange(String range){
@@ -122,7 +146,10 @@ public class ComicViewer extends Activity implements OnClickListener {
 		currentImage.setScaleType(ImageView.ScaleType.CENTER);
 		currentImage.setImageDrawable(getImage(Globals.StartImageURL + 
 				zfill(currentPage, Globals.numZeros) + Globals.EndImageURL));
-		viewFlipper.addView(currentImage);
+		myWebView.loadUrl(Globals.StartImageURL + 
+				zfill(currentPage, Globals.numZeros) + Globals.EndImageURL);
+		((ViewGroup)myWebView.getParent()).removeView(myWebView);
+		viewFlipper.addView(myWebView);
 		viewFlipper.showNext();
 	}
 	
@@ -132,7 +159,9 @@ public class ComicViewer extends Activity implements OnClickListener {
 		currentImage.setImageDrawable(getImage(Globals.StartImageURL + 
 				zfill(currentPage, Globals.numZeros) + Globals.EndImageURL));
 		viewFlipper.removeAllViews();
-		viewFlipper.addView(currentImage);
+		myWebView.loadUrl(Globals.StartImageURL + 
+				zfill(currentPage, Globals.numZeros) + Globals.EndImageURL);
+		viewFlipper.addView(myWebView);
 		viewFlipper.showNext();
 	}
 
