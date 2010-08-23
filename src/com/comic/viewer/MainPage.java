@@ -3,12 +3,15 @@
  */
 package com.comic.viewer;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,11 +29,11 @@ import com.comic.globals.Globals;
 
 public class MainPage extends ListActivity {
 	//list of volume names
-	private String[] volumeNames = {Globals.VolFiveName, 
+	private String[] volumeNames = {Globals.VolSixName, Globals.VolFiveName, 
 			Globals.VolFourName, Globals.VolThreeName, 
 			Globals.VolTwoName, Globals.VolOneName, Globals.VolZeroName};
 	//list of volume info
-	private String[] volumeInfo = {Globals.VolFiveInfo, 
+	private String[] volumeInfo = {Globals.VolSixInfo, Globals.VolFiveInfo, 
 			Globals.VolFourInfo, Globals.VolThreeInfo, 
 			Globals.VolTwoInfo, Globals.VolOneInfo, Globals.VolZeroInfo};
 	private final String copyrightBundleKey = "copyrightDialogBundle";
@@ -49,7 +52,7 @@ public class MainPage extends ListActivity {
 			if (savedInstanceState.getBundle(copyrightBundleKey) != null) {
 				//launch copyright dialog
 				buildCopyrightDialog(Globals.CopyrightTitle, Globals.CopyrightMessage);
-			} else if (savedInstanceState.getBundle(helpBundleKey) != null){
+			} else if (savedInstanceState.getBundle(helpBundleKey) != null) {
 				//launch help dialog
 				buildHelpDialog(Globals.HelpTitle);
 			}
@@ -59,35 +62,45 @@ public class MainPage extends ListActivity {
 	/**
 	 * Launches the corresponding volume based on user selection
 	 * 
-	 * @param volumeNameIndex The index of the user selection
+	 * @param volumeIndex The index of the user selection
 	 */
-	public void launchVolume(int volumeNameIndex){
-		Toast.makeText(this, "Beginning Volume- "+ (5 - volumeNameIndex), 1000).show();
+	public void launchVolume(int volumeIndex) {
+		Toast.makeText(this, "Beginning Volume - "+ (Globals.MAX_VOLUMES - volumeIndex), 1000).show();
 		Intent i = new Intent(this, ComicViewer.class);
-		switch (volumeNameIndex){
-			case 5: //volume zero
+		switch (volumeIndex) {
+			case 6: //volume zero
 				i.putExtra("volumeRange", Globals.ZeroRange);
-				i.putExtra("volumeNumber", (5 - volumeNameIndex));
+				i.putExtra("volumeNumber", (Globals.MAX_VOLUMES - volumeIndex));
 				break;
-			case 4: //volume one
+			case 5: //volume one
 				i.putExtra("volumeRange", Globals.OneRange);
-				i.putExtra("volumeNumber", (5 - volumeNameIndex));
+				i.putExtra("volumeNumber", (Globals.MAX_VOLUMES - volumeIndex));
 				break;
-			case 3: //volume two
+			case 4: //volume two
 				i.putExtra("volumeRange", Globals.TwoRange);
-				i.putExtra("volumeNumber", (5 - volumeNameIndex));
+				i.putExtra("volumeNumber", (Globals.MAX_VOLUMES - volumeIndex));
 				break;
-			case 2: //volume three
+			case 3: //volume three
 				i.putExtra("volumeRange", Globals.ThreeRange);
-				i.putExtra("volumeNumber", (5 - volumeNameIndex));
+				i.putExtra("volumeNumber", (Globals.MAX_VOLUMES - volumeIndex));
 				break;
-			case 1: //volume four
+			case 2: //volume four
 				i.putExtra("volumeRange", Globals.FourRange);
-				i.putExtra("volumeNumber", (5 - volumeNameIndex));
+				i.putExtra("volumeNumber", (Globals.MAX_VOLUMES - volumeIndex));
 				break;
-			case 0: //volume five
+			case 1: //volume five
 				i.putExtra("volumeRange", Globals.FiveRange);
-				i.putExtra("volumeNumber", (5 - volumeNameIndex));
+				i.putExtra("volumeNumber", (Globals.MAX_VOLUMES - volumeIndex));
+				break;
+			case 0: //volume six
+				String sixRange = Globals.SixRange,
+				src = ComicUtils.getHTTPSource("http://samandfuzzy.com");
+				Matcher m = Pattern.compile(Globals.StartImageURL + "0+([0-9]+)")
+															.matcher(src);
+				m.find();
+				sixRange += ("-" + m.group(1));
+				i.putExtra("volumeRange", sixRange);
+				i.putExtra("volumeNumber", (Globals.MAX_VOLUMES - volumeIndex));
 				break;
 		}
 		startActivity(i);

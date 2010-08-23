@@ -38,6 +38,8 @@ public class Globals {
 			"Don't worry! Sam and Fuzzy can fix your problem. Now, if only someone could fix " +
 			"theirs...";
 	public static final String VolFiveName="Volume 5: Sam and Fuzzy Fix Your Problem!";
+	public static final String VolSixName="Volume 6: Sam and Fuzzy Are Very Famous";
+	public static final String VolSixInfo="The most recent volume";
 	
 	public static final String StartImageURL = "http://samandfuzzy.com/comics/";
 	public static final String EndImageURL = ".gif";
@@ -59,6 +61,7 @@ public class Globals {
 	public static final String HelpTitle = "SamAndFuzzyViewer-Help Menu";
 	
 	public static final int numZeros = 8;
+	public static final int MAX_VOLUMES = 6;
 	
 	/** Ids for guest comics which have a different image extension than gif */
 	public static final int[] guest_img_ids = {198, 202, 206, 366, 367, 371, 374, 481, 550, 552, 553,
