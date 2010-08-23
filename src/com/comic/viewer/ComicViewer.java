@@ -18,12 +18,18 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.view.View.OnClickListener;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -39,6 +45,8 @@ public class ComicViewer extends Activity implements OnClickListener {
 	private WebView myWebView;
 	private TextView comicTitleView;
 	private View zoom;
+	private AlertDialog helpDialog;
+	private final String helpBundleKey = "helpDialogBundle";
 	private static Pattern comicTitle = 
 		Pattern.compile("http://samandfuzzy.com/comics/.+?alt=\"(.+?)\"");
 	
@@ -65,6 +73,10 @@ public class ComicViewer extends Activity implements OnClickListener {
 		} else { //destroyed and recreated
 			currentPage = savedInstanceState.getInt("currentPage");
 			displayNewView();
+			if (savedInstanceState.getBundle(helpBundleKey) != null){
+				//launch help dialog
+				buildHelpDialog(Globals.HelpTitle);
+			}
 		}
 	}
 
@@ -276,10 +288,69 @@ public class ComicViewer extends Activity implements OnClickListener {
 			last.setFocusable(false);
 		}
 	}
+	
+	/**
+	 * used to create an options menu
+	 */
+	@Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+		//add menu options
+    	menu.add(Menu.NONE, Globals.HELP_ID, Menu.NONE, "Help");
+    	return super.onCreateOptionsMenu(menu);
+    }
+	/**
+	 * called when an option is selected
+	 */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+    	return(applyMenuChoice(item) || super.onOptionsItemSelected(item));
+    }
+    /**
+     * performs the action on a selected item choice
+     * @param item the id of the item selected
+     * @return true if the item selected was performed
+     */
+	private boolean applyMenuChoice(MenuItem item) {
+		switch(item.getItemId())
+		{
+		case Globals.HELP_ID: //display help menu
+			buildHelpDialog(Globals.HelpTitle);
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * builds an help alert dialog displaying a title and message
+	 * @param title: the title of the alert dialog
+	 */
+	private void buildHelpDialog(String title){
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		//inflate view for setting of content
+		LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+		View layout = inflater.inflate(R.layout.help_dialog_context,
+                (ViewGroup) findViewById(R.id.layout_root));
+		builder.setTitle(title); //sets title
+		builder.setView(layout); //sets content
+		builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+			}
+		});
+		helpDialog = builder.create();
+		helpDialog.show(); //display
+	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putInt("currentPage", currentPage);
+		if (helpDialog != null && helpDialog.isShowing()){
+			//save help dialog if screen orientation changed
+			outState.putBundle(helpBundleKey, helpDialog.onSaveInstanceState());
+		}
 		super.onSaveInstanceState(outState);
 	}
 
