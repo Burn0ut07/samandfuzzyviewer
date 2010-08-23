@@ -4,7 +4,6 @@
 package com.comic.viewer;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -48,8 +47,10 @@ public class MainPage extends ListActivity {
 		//handle for screen orientation change
 		if (savedInstanceState != null){
 			if (savedInstanceState.getBundle(copyrightBundleKey) != null) {
+				//launch copyright dialog
 				buildCopyrightDialog(Globals.CopyrightTitle, Globals.CopyrightMessage);
 			} else if (savedInstanceState.getBundle(helpBundleKey) != null){
+				//launch help dialog
 				buildHelpDialog(Globals.HelpTitle);
 			}
 		}
@@ -64,27 +65,27 @@ public class MainPage extends ListActivity {
 		Toast.makeText(this, "Beginning Volume- "+ (5 - volumeNameIndex), 1000).show();
 		Intent i = new Intent(this, ComicViewer.class);
 		switch (volumeNameIndex){
-			case 5:
+			case 5: //volume zero
 				i.putExtra("volumeRange", Globals.ZeroRange);
 				i.putExtra("volumeNumber", (5 - volumeNameIndex));
 				break;
-			case 4:
+			case 4: //volume one
 				i.putExtra("volumeRange", Globals.OneRange);
 				i.putExtra("volumeNumber", (5 - volumeNameIndex));
 				break;
-			case 3:
+			case 3: //volume two
 				i.putExtra("volumeRange", Globals.TwoRange);
 				i.putExtra("volumeNumber", (5 - volumeNameIndex));
 				break;
-			case 2:
+			case 2: //volume three
 				i.putExtra("volumeRange", Globals.ThreeRange);
 				i.putExtra("volumeNumber", (5 - volumeNameIndex));
 				break;
-			case 1:
+			case 1: //volume four
 				i.putExtra("volumeRange", Globals.FourRange);
 				i.putExtra("volumeNumber", (5 - volumeNameIndex));
 				break;
-			case 0:
+			case 0: //volume five
 				i.putExtra("volumeRange", Globals.FiveRange);
 				i.putExtra("volumeNumber", (5 - volumeNameIndex));
 				break;
@@ -98,6 +99,7 @@ public class MainPage extends ListActivity {
 	@Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
+		//add menu options
     	menu.add(Menu.NONE, Globals.HELP_ID, Menu.NONE, "Help");
     	menu.add(Menu.NONE, Globals.COPYRIGHT_ID, Menu.NONE, "Copyright");
     	return super.onCreateOptionsMenu(menu);
@@ -134,11 +136,12 @@ public class MainPage extends ListActivity {
 	 */
 	private void buildHelpDialog(String title){
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		//inflate view for setting of content
 		LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 		View layout = inflater.inflate(R.layout.help_dialog_context,
                 (ViewGroup) findViewById(R.id.layout_root));
-		builder.setTitle(title);
-		builder.setView(layout);
+		builder.setTitle(title); //sets title
+		builder.setView(layout); //sets content
 		builder.setNegativeButton("OK", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -146,8 +149,8 @@ public class MainPage extends ListActivity {
 			}
 		});
 		helpDialog = builder.create();
-		helpDialog.show();
-	}
+		helpDialog.show(); //display
+	} 
 	
 	/**
 	 * builds an copyright alert dialog displaying a title and message
@@ -156,13 +159,14 @@ public class MainPage extends ListActivity {
 	 */
 	private void buildCopyrightDialog(String title, String message){
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		//inflate view for setting of content
 		LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 		View layout = inflater.inflate(R.layout.copyright_dialog_context,
                 (ViewGroup) findViewById(R.id.layout_root));
 		TextView text = (TextView) layout.findViewById(R.id.text);
 		text.setText(message);
-		builder.setTitle(title);
-		builder.setView(layout);
+		builder.setTitle(title); //sets title
+		builder.setView(layout); //sets content
 		builder.setNegativeButton("OK", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -170,7 +174,7 @@ public class MainPage extends ListActivity {
 			}
 		});
 		copyrightDialog = builder.create();
-		copyrightDialog.show();
+		copyrightDialog.show(); //display
 	}
 	
 	/**
@@ -179,8 +183,10 @@ public class MainPage extends ListActivity {
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		if (copyrightDialog != null && copyrightDialog.isShowing()){
+			//save copyright dialog if screen orientation changed
 			outState.putBundle(copyrightBundleKey, copyrightDialog.onSaveInstanceState());
 		} else if (helpDialog != null && helpDialog.isShowing()){
+			//save help dialog if screen orientation changed
 			outState.putBundle(helpBundleKey, helpDialog.onSaveInstanceState());
 		}
 		super.onSaveInstanceState(outState);
