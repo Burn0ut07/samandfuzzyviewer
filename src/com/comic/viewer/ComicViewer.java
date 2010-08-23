@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -61,7 +62,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 		} else { //destroyed and recreated
 			currentPage = savedInstanceState.getInt("currentPage");
 			displayNewView();
-			if (savedInstanceState.getBundle(helpBundleKey) != null){
+			if (savedInstanceState.getBundle(helpBundleKey) != null) {
 				//launch help dialog
 				buildHelpDialog(Globals.HelpTitle);
 			}
@@ -119,11 +120,9 @@ public class ComicViewer extends Activity implements OnClickListener {
 	 */
 	private void setupInitialView() {
 		showLoading();
-		first.setEnabled(false);
-		first.setFocusable(false);
-		back.setEnabled(false);
-		back.setFocusable(false);
-		currentPage = firstVolPage;
+		SharedPreferences settings = getPreferences(0);
+		currentPage = settings.getInt("lastComic" + currentVol, firstVolPage);
+		adjustControls();
 		myWebView.clearView();
 		myWebView.loadUrl(Globals.StartImageURL
 				+ ComicUtils.zfill(currentPage, Globals.numZeros) + Globals.EndImageURL);
@@ -248,26 +247,28 @@ public class ComicViewer extends Activity implements OnClickListener {
 	}
 	
 	/**
-	 * used to create an options menu
+	 * Used to create an options menu
 	 */
 	@Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
+    public boolean onCreateOptionsMenu(Menu menu) {
 		//add menu options
     	menu.add(Menu.NONE, Globals.HELP_ID, Menu.NONE, "Help");
     	return super.onCreateOptionsMenu(menu);
     }
+	
 	/**
-	 * called when an option is selected
+	 * Called when an option is selected
 	 */
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-    	return(applyMenuChoice(item) || super.onOptionsItemSelected(item));
+    	return (applyMenuChoice(item) || super.onOptionsItemSelected(item));
     }
+    
     /**
-     * performs the action on a selected item choice
-     * @param item the id of the item selected
+     * Performs the action on a selected item choice
+     * 
+     * @param item The id of the item selected
      * @return true if the item selected was performed
      */
 	private boolean applyMenuChoice(MenuItem item) {
@@ -281,10 +282,11 @@ public class ComicViewer extends Activity implements OnClickListener {
 	}
 	
 	/**
-	 * builds an help alert dialog displaying a title and message
-	 * @param title: the title of the alert dialog
+	 * Builds an help alert dialog displaying a title and message
+	 * 
+	 * @param title The title of the alert dialog
 	 */
-	private void buildHelpDialog(String title){
+	private void buildHelpDialog(String title) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		//inflate view for setting of content
 		LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -310,6 +312,24 @@ public class ComicViewer extends Activity implements OnClickListener {
 			outState.putBundle(helpBundleKey, helpDialog.onSaveInstanceState());
 		}
 		super.onSaveInstanceState(outState);
+	}
+	
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onStop()
+	 */
+	@Override
+	protected void onStop() {
+		super.onStop();
+		
+		// We need an Editor object to make preference changes.
+	    // All objects are from android.context.Context
+	    SharedPreferences settings = getPreferences(0);
+	    SharedPreferences.Editor editor = settings.edit();
+	    editor.putInt("lastComic" + currentVol, currentPage);
+	    
+	    // Commit the edits!
+	    editor.commit();
 	}
 
 	/**
