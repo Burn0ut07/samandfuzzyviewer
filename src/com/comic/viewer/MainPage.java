@@ -94,27 +94,27 @@ public class MainPage extends ListActivity {
 	}
 	
 	/**
-	 * used to create an options menu
+	 * Used to create an options menu
 	 */
 	@Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-		//add menu options
+    public boolean onCreateOptionsMenu(Menu menu) {
     	menu.add(Menu.NONE, Globals.HELP_ID, Menu.NONE, "Help");
     	menu.add(Menu.NONE, Globals.COPYRIGHT_ID, Menu.NONE, "Copyright");
     	return super.onCreateOptionsMenu(menu);
     }
+	
 	/**
-	 * called when an option is selected
+	 * Called when an option is selected
 	 */
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-    	return(applyMenuChoice(item) || super.onOptionsItemSelected(item));
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	return (applyMenuChoice(item) || super.onOptionsItemSelected(item));
     }
+    
     /**
-     * performs the action on a selected item choice
-     * @param item the id of the item selected
+     * Performs the action on a selected item choice
+     * 
+     * @param item The id of the item selected
      * @return true if the item selected was performed
      */
 	private boolean applyMenuChoice(MenuItem item) {
@@ -131,10 +131,11 @@ public class MainPage extends ListActivity {
 	}
 	
 	/**
-	 * builds an help alert dialog displaying a title and message
-	 * @param title: the title of the alert dialog
+	 * Builds a help alert dialog displaying a title and message
+	 * 
+	 * @param title The title of the alert dialog
 	 */
-	private void buildHelpDialog(String title){
+	private void buildHelpDialog(String title) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		//inflate view for setting of content
 		LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -153,11 +154,12 @@ public class MainPage extends ListActivity {
 	} 
 	
 	/**
-	 * builds an copyright alert dialog displaying a title and message
-	 * @param title: the title of the alert dialog
-	 * @param message: the content of the alert dialog
+	 * Builds an copyright alert dialog displaying a title and message
+	 * 
+	 * @param title The title of the alert dialog
+	 * @param message The content of the alert dialog
 	 */
-	private void buildCopyrightDialog(String title, String message){
+	private void buildCopyrightDialog(String title, String message) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		//inflate view for setting of content
 		LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -178,7 +180,7 @@ public class MainPage extends ListActivity {
 	}
 	
 	/**
-	 * called when screen orientation is changed
+	 * Called when screen orientation is changed
 	 */
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {

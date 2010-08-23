@@ -44,10 +44,10 @@ public class ComicViewer extends Activity implements OnClickListener {
 	private int firstVolPage, lastVolPage, currentPage, currentVol;
 	private WebView myWebView;
 	private TextView comicTitleView;
-	private View zoom;
+	private View zoom; 
 	private AlertDialog helpDialog;
 	private final String helpBundleKey = "helpDialogBundle";
-	private static Pattern comicTitle = 
+	private static Pattern comicTitleRegex = 
 		Pattern.compile("http://samandfuzzy.com/comics/.+?alt=\"(.+?)\"");
 	
 	@Override
@@ -194,9 +194,12 @@ public class ComicViewer extends Activity implements OnClickListener {
 	 */
 	private void setComicTitle() {
 		String comicSource = getHTTPSource("http://samandfuzzy.com/" + currentPage);
-		Matcher m = comicTitle.matcher(comicSource);
+		Matcher m = comicTitleRegex.matcher(comicSource);
 		m.find();
-		comicTitleView.setText("Volume " + currentVol + " - " + m.group(1));
+		String comicTitle = m.group(1);
+		if(!Character.isLetter(comicTitle.charAt(0)))
+			comicTitle = comicTitle.substring(3, comicTitle.length() - 4);
+		comicTitleView.setText("Volume " + currentVol + " - " + comicTitle);
 	}
 
 	@Override
