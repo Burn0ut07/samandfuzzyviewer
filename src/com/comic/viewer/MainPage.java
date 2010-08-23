@@ -47,21 +47,27 @@ public class MainPage extends ListActivity {
 		switch (volumeNameIndex){
 			case 5:
 				i.putExtra("volumeRange", Globals.ZeroRange);
+				i.putExtra("volumeNumber", (5 - volumeNameIndex));
 				break;
 			case 4:
 				i.putExtra("volumeRange", Globals.OneRange);
+				i.putExtra("volumeNumber", (5 - volumeNameIndex));
 				break;
 			case 3:
 				i.putExtra("volumeRange", Globals.TwoRange);
+				i.putExtra("volumeNumber", (5 - volumeNameIndex));
 				break;
 			case 2:
 				i.putExtra("volumeRange", Globals.ThreeRange);
+				i.putExtra("volumeNumber", (5 - volumeNameIndex));
 				break;
 			case 1:
 				i.putExtra("volumeRange", Globals.FourRange);
+				i.putExtra("volumeNumber", (5 - volumeNameIndex));
 				break;
 			case 0:
 				i.putExtra("volumeRange", Globals.FiveRange);
+				i.putExtra("volumeNumber", (5 - volumeNameIndex));
 				break;
 		}
 		startActivity(i);

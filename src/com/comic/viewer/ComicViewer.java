@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,7 +35,7 @@ import com.comic.globals.Globals;
 public class ComicViewer extends Activity implements OnClickListener {
 	private ProgressDialog loadingDialog;
 	private Button first, back, mainMenu, next, last;
-	private int firstVolPage, lastVolPage, currentPage;
+	private int firstVolPage, lastVolPage, currentPage, currentVol;
 	private WebView myWebView;
 	private TextView comicTitleView;
 	private View zoom;
@@ -46,7 +45,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
 		// sets up custom title bar
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.comicviewer);
@@ -54,18 +53,16 @@ public class ComicViewer extends Activity implements OnClickListener {
 				R.layout.comicviewertitlebar);
 		// sets up objects in view
 		setup();
+		// get volume range
+		Bundle bundle = getIntent().getExtras();
+		// sets up the range of this volume
+		setThisVolumeRange((String) bundle.getString("volumeRange"));
+		currentVol = (int) bundle.getInt("volumeNumber");
 		//new instance
 		if (savedInstanceState == null) {
-			showLoading();
-			// get volume range
-			Bundle bundle = getIntent().getExtras();
-			// sets up the range of this volume
-			setThisVolumeRange((String) bundle.getString("volumeRange"));
 			//sets up first view to display
 			setupInitialView();
 		} else { //destroyed and recreated
-			firstVolPage = savedInstanceState.getInt("firstVolPage");
-			lastVolPage = savedInstanceState.getInt("lastVolPage");
 			currentPage = savedInstanceState.getInt("currentPage");
 			displayNewView();
 		}
@@ -154,6 +151,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	 * Sets up the initial view, called when launched from main menu
 	 */
 	private void setupInitialView() {
+		showLoading();
 		first.setEnabled(false);
 		first.setFocusable(false);
 		back.setEnabled(false);
@@ -186,7 +184,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 		String comicSource = getHTTPSource("http://samandfuzzy.com/" + currentPage);
 		Matcher m = comicTitle.matcher(comicSource);
 		m.find();
-		comicTitleView.setText(m.group(1));
+		comicTitleView.setText("Volume " + currentVol + " - " + m.group(1));
 	}
 
 	@Override
@@ -281,8 +279,6 @@ public class ComicViewer extends Activity implements OnClickListener {
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-		outState.putInt("firstVolPage", firstVolPage);
-		outState.putInt("lastVolPage", lastVolPage);
 		outState.putInt("currentPage", currentPage);
 		super.onSaveInstanceState(outState);
 	}
