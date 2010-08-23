@@ -3,12 +3,23 @@
  */
 package com.comic.viewer;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
@@ -17,6 +28,7 @@ import android.view.Window;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.comic.globals.Globals;
@@ -26,7 +38,10 @@ public class ComicViewer extends Activity implements OnClickListener {
 	private Button first, back, mainMenu, next, last;
 	private int firstVolPage, lastVolPage, currentPage;
 	private WebView myWebView;
+	private TextView comicTitleView;
 	private View zoom;
+	private static Pattern comicTitle = 
+		Pattern.compile("http://samandfuzzy.com/comics/.+?alt=\"(.+?)\"");
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -40,7 +55,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 		// sets up objects in view
 		setup();
 		//new instance
-		if (savedInstanceState == null){
+		if (savedInstanceState == null) {
 			showLoading();
 			// get volume range
 			Bundle bundle = getIntent().getExtras();
@@ -72,6 +87,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 		next.setOnClickListener(this);
 		last = (Button) findViewById(R.id.current);
 		last.setOnClickListener(this);
+		comicTitleView = (TextView) findViewById(R.id.comictitle);
 		//sets up image display and zoom
 		myWebView.setClickable(true);
 		final Activity activity = this;
@@ -146,6 +162,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 		myWebView.clearView();
 		myWebView.loadUrl(Globals.StartImageURL
 				+ zfill(currentPage, Globals.numZeros) + Globals.EndImageURL);
+		setComicTitle();
 		doneLoading();
 	}
 
@@ -158,7 +175,18 @@ public class ComicViewer extends Activity implements OnClickListener {
 		myWebView.clearView();
 		myWebView.loadUrl(Globals.StartImageURL
 				+ zfill(currentPage, Globals.numZeros) + Globals.EndImageURL);
+		setComicTitle();
 		doneLoading();
+	}
+	
+	/**
+	 * Sets the comic title to the current page
+	 */
+	private void setComicTitle() {
+		String comicSource = getHTTPSource("http://samandfuzzy.com/" + currentPage);
+		Matcher m = comicTitle.matcher(comicSource);
+		m.find();
+		comicTitleView.setText(m.group(1));
 	}
 
 	@Override
@@ -177,7 +205,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * setups for displaying of next immediate view
+	 * Setups for displaying of next immediate view
 	 */
 	private void setupNextView() {
 		++currentPage;
@@ -272,5 +300,33 @@ public class ComicViewer extends Activity implements OnClickListener {
 	 */
 	public void doneLoading() {
 		loadingDialog.dismiss();
+	}
+	
+	/**
+	 * Gets the source of a webpage as a String
+	 * 
+	 * @param url The url of the webpage as a String
+	 * @return A String of the source of the webpage
+	 */
+	private String getHTTPSource(String url) {
+		HttpClient client = new DefaultHttpClient();
+		HttpGet request = new HttpGet(url);
+		HttpResponse response;
+		StringBuilder httpSource = new StringBuilder();
+		try {
+			response = client.execute(request);
+			InputStream in = response.getEntity().getContent();
+			BufferedReader reader = new BufferedReader(
+					new InputStreamReader(in));
+			for(String i = reader.readLine(); reader.read() != -1; i = reader.readLine())
+				httpSource.append(i);
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return httpSource.toString();
 	}
 }
