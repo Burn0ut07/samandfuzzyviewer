@@ -3,8 +3,9 @@
  */
 package com.comic.globals;
 
+import android.view.Menu;
+
 public class Globals {
-	public static final String IntroImage="http://samandfuzzy.com/images/vol5_ad.gif";
 	public static final String VolZeroImage="http://samandfuzzy.com/imgint/volume0.gif";
 	public static final String VolZeroInfo="The first Sam and Fuzzy strips are a little rough " +
 			"around the edges, but are not without their hardcore advocates.";
@@ -49,9 +50,20 @@ public class Globals {
 	public static final String FiveRange = "1046-1236";
 	public static final String SixRange = "1237";
 	
+	public static final String CopyrightTitle = "Copyright";
+	public static final String CopyrightMessage =
+		"All the comics featured in this app are retrieved from Sam Logan's website www.samandfuzzy.com. " +
+		"The developers of this app does not claim any rights or ownership over the content. " + 
+		"We have the explicit approval from the owner to display the owners content. " +
+		"If you have any questions or concerns over copyright, feel free to contact us.";
+	public static final String HelpTitle = "SamAndFuzzyViewer-Help Menu";
+	
 	public static final int numZeros = 8;
 	
 	/** Ids for guest comics which have a different image extension than gif */
 	public static final int[] guest_img_ids = {198, 202, 206, 366, 367, 371, 374, 481, 550, 552, 553,
 		554, 557, 710, 715, 718, 894, 897, 898, 899, 900, 1202, 1203, 1205, 1207, 1208, 1209, 1211};
+	
+	public static final int HELP_ID = Menu.FIRST;
+	public static final int COPYRIGHT_ID = Menu.FIRST + 1;
 }

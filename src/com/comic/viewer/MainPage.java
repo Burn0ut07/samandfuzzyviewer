@@ -3,11 +3,17 @@
  */
 package com.comic.viewer;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -28,12 +34,25 @@ public class MainPage extends ListActivity {
 	private String[] volumeInfo = {Globals.VolFiveInfo, 
 			Globals.VolFourInfo, Globals.VolThreeInfo, 
 			Globals.VolTwoInfo, Globals.VolOneInfo, Globals.VolZeroInfo};
+	private final String copyrightBundleKey = "copyrightDialogBundle";
+	private final String helpBundleKey = "helpDialogBundle";
+	private AlertDialog copyrightDialog, helpDialog;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		setContentView(R.layout.main);
+		//set the main menu list
 		setListAdapter(new ListVolumesAdapter(this));
+		//handle for screen orientation change
+		if (savedInstanceState != null){
+			if (savedInstanceState.getBundle(copyrightBundleKey) != null) {
+				buildCopyrightDialog(Globals.CopyrightTitle, Globals.CopyrightMessage);
+			} else if (savedInstanceState.getBundle(helpBundleKey) != null){
+				buildHelpDialog(Globals.HelpTitle);
+			}
+		}
 	}
 	
 	/**
@@ -73,6 +92,100 @@ public class MainPage extends ListActivity {
 		startActivity(i);
 	}
 	
+	/**
+	 * used to create an options menu
+	 */
+	@Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+    	menu.add(Menu.NONE, Globals.HELP_ID, Menu.NONE, "Help");
+    	menu.add(Menu.NONE, Globals.COPYRIGHT_ID, Menu.NONE, "Copyright");
+    	return super.onCreateOptionsMenu(menu);
+    }
+	/**
+	 * called when an option is selected
+	 */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+    	return(applyMenuChoice(item) || super.onOptionsItemSelected(item));
+    }
+    /**
+     * performs the action on a selected item choice
+     * @param item the id of the item selected
+     * @return true if the item selected was performed
+     */
+	private boolean applyMenuChoice(MenuItem item) {
+		switch(item.getItemId())
+		{
+		case Globals.HELP_ID: //display help menu
+			buildHelpDialog(Globals.HelpTitle);
+			return true;
+		case Globals.COPYRIGHT_ID: //display copyright information
+			buildCopyrightDialog(Globals.CopyrightTitle, Globals.CopyrightMessage);
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * builds an help alert dialog displaying a title and message
+	 * @param title: the title of the alert dialog
+	 */
+	private void buildHelpDialog(String title){
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+		View layout = inflater.inflate(R.layout.help_dialog_context,
+                (ViewGroup) findViewById(R.id.layout_root));
+		builder.setTitle(title);
+		builder.setView(layout);
+		builder.setNegativeButton("OK", new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+			}
+		});
+		helpDialog = builder.create();
+		helpDialog.show();
+	}
+	
+	/**
+	 * builds an copyright alert dialog displaying a title and message
+	 * @param title: the title of the alert dialog
+	 * @param message: the content of the alert dialog
+	 */
+	private void buildCopyrightDialog(String title, String message){
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+		View layout = inflater.inflate(R.layout.copyright_dialog_context,
+                (ViewGroup) findViewById(R.id.layout_root));
+		TextView text = (TextView) layout.findViewById(R.id.text);
+		text.setText(message);
+		builder.setTitle(title);
+		builder.setView(layout);
+		builder.setNegativeButton("OK", new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+			}
+		});
+		copyrightDialog = builder.create();
+		copyrightDialog.show();
+	}
+	
+	/**
+	 * called when screen orientation is changed
+	 */
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		if (copyrightDialog != null && copyrightDialog.isShowing()){
+			outState.putBundle(copyrightBundleKey, copyrightDialog.onSaveInstanceState());
+		} else if (helpDialog != null && helpDialog.isShowing()){
+			outState.putBundle(helpBundleKey, helpDialog.onSaveInstanceState());
+		}
+		super.onSaveInstanceState(outState);
+	}
+
 	@Override
 	protected void onListItemClick(ListView l, View v, int position,long id){
 		launchVolume(position); //perform action based on user click

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+			  android:id="@+id/layout_root"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:padding="10dp"
+              >
+	<LinearLayout
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	>
+    <TextView android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:text="The SamAndFuzzyViewer application is a viewer
+for veiwing comic strips retrieved from Sam Logan's website 
+www.samandfuzzy.com, specifically the captioned strip. 
+The main menu is a list of the different volumes that separate
+the comics into continuous series."
+              android:textSize="13sp"
+              android:layout_marginBottom="3dip"
+              />
+    <TextView android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:text="The First button"
+              android:textSize="15sp"
+              android:textStyle="bold"
+              android:layout_marginBottom="3dip"
+              />
+	<TextView android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:text="Displays the first comic strip of the current volume."
+              android:textSize="13sp"
+              android:layout_marginBottom="3dip"
+              />
+    <TextView android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:text="The Back button"
+              android:textSize="15sp"
+              android:textStyle="bold"
+              android:layout_marginBottom="3dip"
+              />
+    <TextView android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:text="Displays the immediate previous comic strip."
+              android:textSize="13sp"
+              android:layout_marginBottom="3dip"
+              />
+    <TextView android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:text="The Main Menu button"
+              android:textSize="15sp"
+              android:textStyle="bold"
+              android:layout_marginBottom="3dip"
+              />
+	<TextView android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:text="Displays the main menu consisting of the entire list of volumes available."
+              android:textSize="13sp"
+              android:layout_marginBottom="3dip"
+              />
+    <TextView android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:text="The Next button"
+              android:textSize="15sp"
+              android:textStyle="bold"
+              android:layout_marginBottom="3dip"
+              />
+	<TextView android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:text="Displays the next immediate comic strip."
+              android:textSize="13sp"
+              android:layout_marginBottom="3dip"
+              />
+    <TextView android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:text="The Last button"
+              android:textSize="15sp"
+              android:textStyle="bold"
+              android:layout_marginBottom="3dip"
+              />
+	<TextView android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:text="Displays the last comic strip of the current volume."
+              android:textSize="13sp"
+              android:layout_marginBottom="3dip"
+              />
+    <TextView android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:text="The Zoom buttons"
+              android:textSize="15sp"
+              android:textStyle="bold"
+              android:layout_marginBottom="3dip"
+              />
+	<TextView android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:text="Upon finger sliding movement, the zoom in and out buttons 
+are displayed. Use these buttons to resize the image as desired."
+              android:textSize="13sp"
+              android:layout_marginBottom="3dip"
+              />
+              </LinearLayout>
+</ScrollView>
