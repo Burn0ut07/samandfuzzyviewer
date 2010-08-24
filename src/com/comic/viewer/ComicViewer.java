@@ -22,6 +22,7 @@ import android.view.Window;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,7 @@ import com.comic.globals.Globals;
 public class ComicViewer extends Activity implements OnClickListener {
 	private ProgressDialog loadingDialog;
 	private Button first, back, mainMenu, next, last;
+	private ImageButton adBanner;
 	private int firstVolPage, lastVolPage, currentPage, currentVol;
 	private WebView myWebView;
 	private TextView comicTitleView;
@@ -81,7 +83,11 @@ public class ComicViewer extends Activity implements OnClickListener {
 		last = (Button) findViewById(R.id.current);
 		last.setOnClickListener(this);
 		comicTitleView = (TextView) findViewById(R.id.comictitle);
-		
+
+		adBanner = (ImageButton) findViewById(R.id.adbanner);
+		adBanner.setBackgroundDrawable(ComicUtils.getImage(
+				"http://samandfuzzy.com/misc/newbook_1launch.jpg"));
+
 		//sets up image display and zoom
 		myWebView.setClickable(true);
 		final Activity activity = this;
