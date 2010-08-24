@@ -10,7 +10,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -87,6 +89,15 @@ public class ComicViewer extends Activity implements OnClickListener {
 		adBanner = (ImageButton) findViewById(R.id.adbanner);
 		adBanner.setBackgroundDrawable(ComicUtils.getImage(
 				"http://samandfuzzy.com/misc/newbook_1launch.jpg"));
+		adBanner.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Uri uri = Uri.parse("http://www.topatoco.com/samandfuzzy");
+				startActivity(new Intent(Intent.ACTION_VIEW, uri));
+			}
+		});
 
 		//sets up image display and zoom
 		myWebView.setClickable(true);
