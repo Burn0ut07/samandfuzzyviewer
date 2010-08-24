@@ -1,4 +1,4 @@
-package com.comic.viewer;
+package com.comic.misc;
 
 import java.io.BufferedReader;
 import java.io.IOException;

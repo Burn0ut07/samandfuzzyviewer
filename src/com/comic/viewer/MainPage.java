@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.comic.globals.Globals;
+import com.comic.misc.ComicUtils;
 
 public class MainPage extends ListActivity {
 	//list of volume names

@@ -1,19 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="#000000">
-    <TextView
-    	android:id="@+id/comictitle"
-    	android:layout_width="fill_parent"
-    	android:layout_height="wrap_content"
-    	android:textSize="13sp"
-    	android:textColor="#FFFFFF"/>
-	<WebView
-		android:id="@+id/webView"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:background="#000000"/>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent" android:background="#000000">
+	<LinearLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:orientation="vertical"
+		android:id="@+id/comicview">
+	<RelativeLayout android:id="@+id/navbar"
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
+		android:background="#42426F">
+		<TableLayout android:id="@+id/TableLayout01"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_centerHorizontal="true">
+			<TableRow android:layout_below="@+id/TableLayout01"
+				android:id="@+id/TableRow01" android:layout_height="wrap_content"
+				android:layout_width="wrap_content" android:fitsSystemWindows="true">
+				<Button android:id="@+id/start" android:text="First"
+					android:layout_height="fill_parent" android:layout_below="@+id/TableLayout01"
+					android:layout_width="wrap_content" android:layout_marginTop="2dip" />
+				<Button android:id="@+id/back" android:text="Back"
+					android:layout_height="fill_parent" android:layout_toRightOf="@+id/Button01"
+					android:layout_below="@+id/TableLayout01" android:layout_width="wrap_content"
+					android:layout_marginTop="2dip" />
+				<Button android:id="@+id/mainmenu" android:text="Main Menu"
+					android:layout_height="fill_parent" android:layout_toRightOf="@+id/Button02"
+					android:layout_below="@+id/TableLayout01" android:layout_width="wrap_content"
+					android:layout_marginTop="2dip" />
+				<Button android:id="@+id/next" android:text="Next"
+					android:layout_height="fill_parent" android:layout_toRightOf="@+id/Button03"
+					android:layout_below="@+id/TableLayout01" android:layout_width="wrap_content"
+					android:layout_marginTop="2dip" />
+				<Button android:id="@+id/current" android:text="Last"
+					android:layout_height="fill_parent" android:layout_toRightOf="@+id/Button04"
+					android:layout_below="@+id/TableLayout01" android:layout_width="wrap_content"
+					android:layout_marginTop="2dip" />
+			</TableRow>
+		</TableLayout>
+	</RelativeLayout>
+	<TextView android:id="@+id/comictitle" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:textSize="13sp"
+		android:textColor="#FFFFFF" />
+	<WebView android:id="@+id/webView" android:layout_width="fill_parent"
+		android:layout_height="fill_parent" android:background="#000000" />
+	</LinearLayout>
 </TableLayout>

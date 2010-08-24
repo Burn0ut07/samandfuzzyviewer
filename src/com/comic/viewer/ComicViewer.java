@@ -19,6 +19,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -26,6 +28,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.comic.globals.Globals;
+import com.comic.misc.ComicUtils;
+import com.comic.misc.NavBarListener;
 
 public class ComicViewer extends Activity implements OnClickListener {
 	private ProgressDialog loadingDialog;
@@ -33,7 +37,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	private int firstVolPage, lastVolPage, currentPage, currentVol;
 	private WebView myWebView;
 	private TextView comicTitleView;
-	private View zoom; 
+	private View zoom, navbar; 
 	private AlertDialog helpDialog;
 	private final String helpBundleKey = "helpDialogBundle", lastComicKey = "lastComic";
 	private static Pattern comicTitleRegex = 
@@ -44,10 +48,10 @@ public class ComicViewer extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		
 		// sets up custom title bar
-		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.comicviewer);
-		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
-				R.layout.comicviewertitlebar);
+		//getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
+				//R.layout.comicviewertitlebar);
 		// sets up objects in view
 		setup();
 		//new instance
@@ -81,6 +85,8 @@ public class ComicViewer extends Activity implements OnClickListener {
 		last = (Button) findViewById(R.id.current);
 		last.setOnClickListener(this);
 		comicTitleView = (TextView) findViewById(R.id.comictitle);
+		comicTitleView.setOnClickListener(this);
+		navbar = findViewById(R.id.navbar);
 		
 		//sets up image display and zoom
 		myWebView.setClickable(true);
@@ -131,7 +137,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 		setComicTitle();
 		doneLoading();
 	}
-
+	
 	/**
 	 * Displays a new comic image to the view
 	 */
@@ -143,6 +149,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 				+ ComicUtils.zfill(currentPage, Globals.numZeros) + Globals.EndImageURL);
 		setComicTitle();
 		doneLoading();
+		fadeNavBar();
 	}
 	
 	/**
@@ -157,6 +164,22 @@ public class ComicViewer extends Activity implements OnClickListener {
 			comicTitle = comicTitle.substring(3, comicTitle.length() - 4);
 		comicTitleView.setText("Volume " + currentVol + " - " + comicTitle);
 	}
+	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onResume()
+	 */
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		fadeNavBar();
+	}
+	
+	private void fadeNavBar() {
+		Animation fadeout = AnimationUtils.loadAnimation(this, R.anim.fade_out);
+		fadeout.setAnimationListener(new NavBarListener(navbar));
+		navbar.startAnimation(fadeout);
+	}
 
 	@Override
 	public void onClick(View v) {
@@ -170,6 +193,8 @@ public class ComicViewer extends Activity implements OnClickListener {
 			setupLastView();
 		} else if (v == mainMenu) {
 			finish();
+		} else if (v == comicTitleView) {
+			navbar.setVisibility(View.VISIBLE);
 		}
 	}
 
