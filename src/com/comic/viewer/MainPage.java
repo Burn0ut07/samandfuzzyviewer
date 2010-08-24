@@ -236,21 +236,27 @@ public class MainPage extends ListActivity {
 				holder.volumeName = (TextView) convertView
 						.findViewById(R.id.volumeName);
 				holder.volumeDescription = (TextView) convertView
-						.findViewById(R.id.volumeDiscription);
+						.findViewById(R.id.volumeDescription);
+				holder.volumeDescriptionBold = (TextView) convertView
+						.findViewById(R.id.volumeDiscriptionBold);
 				convertView.setTag(holder);
 			} else {
-				// Get the ViewHolder back to get fast access to the TextView
-				// and the ImageView.
 				holder = (ViewHolder) convertView.getTag();
 			}
 			holder.volumeName.setText(volumeNames[position]);
 			holder.volumeDescription.setText(volumeInfo[position]);
+			if(position == 1) { //volume 5
+				holder.volumeDescriptionBold.setText(Globals.EndorseVolFive);
+			} else {
+				holder.volumeDescriptionBold.setVisibility(View.GONE);
+			}
 			return convertView;
 		}
 
 		class ViewHolder {
 			TextView volumeName;
 			TextView volumeDescription;
+			TextView volumeDescriptionBold;
 		}
 
 		public Filter getFilter() {

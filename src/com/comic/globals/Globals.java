@@ -52,10 +52,13 @@ public class Globals {
 	public static final String FiveRange = "1046-1236";
 	public static final String SixRange = "1237";
 	
+	public static final String EndorseVolFive = "The start of a brand new epic, this volume is the " +
+			"perfect starting place for new readers!";
+	
 	public static final String CopyrightTitle = "Copyright";
 	public static final String CopyrightMessage =
 		"All the comics featured in this app are retrieved from Sam Logan's website www.samandfuzzy.com. " +
-		"The developers of this app does not claim any rights or ownership over the content. " + 
+		"The developers of this app do not claim any rights or ownership over the content. " + 
 		"We have the explicit approval from the owner to display the owners content. " +
 		"If you have any questions or concerns over copyright, feel free to contact us.";
 	public static final String HelpTitle = "SamAndFuzzyViewer-Help Menu";
