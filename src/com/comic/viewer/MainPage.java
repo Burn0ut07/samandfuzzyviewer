@@ -3,15 +3,13 @@
  */
 package com.comic.viewer;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -48,7 +46,7 @@ public class MainPage extends ListActivity {
 		//set the main menu list
 		setListAdapter(new ListVolumesAdapter(this));
 		//handle for screen orientation change
-		if (savedInstanceState != null){
+		if (savedInstanceState != null) {
 			if (savedInstanceState.getBundle(copyrightBundleKey) != null) {
 				//launch copyright dialog
 				buildCopyrightDialog(Globals.CopyrightTitle, Globals.CopyrightMessage);
@@ -57,6 +55,19 @@ public class MainPage extends ListActivity {
 				buildHelpDialog(Globals.HelpTitle);
 			}
 		}
+		launchLastComic();
+	}
+	
+	/**
+	 * Launches last comic viewed
+	 */
+	private void launchLastComic() {
+		SharedPreferences prefs = getSharedPreferences("VOLUME_SAVES", 0);
+		int i = -1, lastViewed = -1;
+		for(i = Globals.MAX_VOLUMES; i >= 0 && lastViewed == -1; i--)
+			lastViewed = prefs.getInt("lastComic" + i, -1);
+		if(i >= 0)
+			launchVolume(Globals.MAX_VOLUMES - (i + 1));
 	}
 	
 	/**
@@ -93,13 +104,7 @@ public class MainPage extends ListActivity {
 				i.putExtra("volumeNumber", (Globals.MAX_VOLUMES - volumeIndex));
 				break;
 			case 0: //volume six
-				String sixRange = Globals.SixRange,
-				src = ComicUtils.getHTTPSource("http://samandfuzzy.com");
-				Matcher m = Pattern.compile(Globals.StartImageURL + "0+([0-9]+)")
-															.matcher(src);
-				m.find();
-				sixRange += ("-" + m.group(1));
-				i.putExtra("volumeRange", sixRange);
+				i.putExtra("volumeRange", ComicUtils.lastVolumeRange(6));
 				i.putExtra("volumeNumber", (Globals.MAX_VOLUMES - volumeIndex));
 				break;
 		}

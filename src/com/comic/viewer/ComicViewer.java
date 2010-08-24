@@ -122,7 +122,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	 */
 	private void setupInitialView() {
 		showLoading();
-		SharedPreferences settings = getPreferences(0);
+		SharedPreferences settings = getSharedPreferences("VOLUME_SAVES", 0);
 		currentPage = settings.getInt(lastComicKey + currentVol, firstVolPage);
 		adjustControls();
 		myWebView.clearView();
@@ -326,7 +326,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 		
 		// We need an Editor object to make preference changes.
 	    // All objects are from android.context.Context
-	    SharedPreferences settings = getPreferences(0);
+	    SharedPreferences settings = getSharedPreferences("VOLUME_SAVES", 0);
 	    SharedPreferences.Editor editor = settings.edit();
 	    editor.putInt(lastComicKey + currentVol, currentPage);
 	    

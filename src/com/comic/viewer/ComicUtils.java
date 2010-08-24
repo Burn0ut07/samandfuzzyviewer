@@ -5,12 +5,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+
+import com.comic.globals.Globals;
 
 import android.graphics.drawable.Drawable;
 
@@ -77,6 +81,22 @@ public class ComicUtils {
 		for (int i = 0; i < (zeros - n.length()); i++)
 			z_filled = "0" + z_filled;
 		return z_filled;
+	}
+	
+	/**
+	 * Returns a String of the range for the latest volume
+	 * @param currVol TODO
+	 * 
+	 * @return String range of latest volume
+	 */
+	public static String lastVolumeRange(int currVol) {
+		String volRange = Globals.VOL_RANGES[currVol],
+		src = ComicUtils.getHTTPSource("http://samandfuzzy.com");
+		Matcher m = Pattern.compile(Globals.StartImageURL + "0+([0-9]+)")
+													.matcher(src);
+		m.find();
+		volRange += ("-" + m.group(1));
+		return volRange;
 	}
 
 }

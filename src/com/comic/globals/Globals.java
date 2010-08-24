@@ -55,6 +55,9 @@ public class Globals {
 	public static final String EndorseVolFive = "The start of a brand new epic, this volume is the " +
 			"perfect starting place for new readers!";
 	
+	public static final String[] VOL_RANGES = {ZeroRange, OneRange, TwoRange,
+		ThreeRange, FourRange, FiveRange, SixRange};
+	
 	public static final String CopyrightTitle = "Copyright";
 	public static final String CopyrightMessage =
 		"All the comics featured in this app are retrieved from Sam Logan's website www.samandfuzzy.com. " +
