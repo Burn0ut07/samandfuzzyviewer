@@ -14,7 +14,7 @@
     <TextView android:layout_width="fill_parent"
               android:layout_height="wrap_content"
               android:text="The SamAndFuzzyViewer application is a viewer
-for veiwing comic strips retrieved from Sam Logan's website 
+for viewing comic strips retrieved from Sam Logan's website 
 www.samandfuzzy.com, specifically the captioned strip. 
 The main menu is a list of the different volumes that separate
 the comics into continuous series."
