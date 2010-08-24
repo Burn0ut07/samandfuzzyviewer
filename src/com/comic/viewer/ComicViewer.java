@@ -35,7 +35,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	private TextView comicTitleView;
 	private View zoom; 
 	private AlertDialog helpDialog;
-	private final String helpBundleKey = "helpDialogBundle";
+	private final String helpBundleKey = "helpDialogBundle", lastComicKey = "lastComic";
 	private static Pattern comicTitleRegex = 
 		Pattern.compile("http://samandfuzzy.com/comics/.+?alt=\"(.+?)\"");
 	
@@ -50,11 +50,6 @@ public class ComicViewer extends Activity implements OnClickListener {
 				R.layout.comicviewertitlebar);
 		// sets up objects in view
 		setup();
-		// get volume range
-		Bundle bundle = getIntent().getExtras();
-		// sets up the range of this volume
-		setThisVolumeRange((String) bundle.getString("volumeRange"));
-		currentVol = (int) bundle.getInt("volumeNumber");
 		//new instance
 		if (savedInstanceState == null) {
 			//sets up first view to display
@@ -86,6 +81,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 		last = (Button) findViewById(R.id.current);
 		last.setOnClickListener(this);
 		comicTitleView = (TextView) findViewById(R.id.comictitle);
+		
 		//sets up image display and zoom
 		myWebView.setClickable(true);
 		final Activity activity = this;
@@ -100,6 +96,12 @@ public class ComicViewer extends Activity implements OnClickListener {
 		zoom = myWebView.getZoomControls();
 		zoom.setVisibility(View.VISIBLE);
 		myWebView.getSettings().setBuiltInZoomControls(true);
+		
+		// get volume range
+		Bundle bundle = getIntent().getExtras();
+		// sets up the range of this volume
+		setThisVolumeRange((String) bundle.getString("volumeRange"));
+		currentVol = (int) bundle.getInt("volumeNumber");
 	}
 
 	/**
@@ -121,7 +123,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	private void setupInitialView() {
 		showLoading();
 		SharedPreferences settings = getPreferences(0);
-		currentPage = settings.getInt("lastComic" + currentVol, firstVolPage);
+		currentPage = settings.getInt(lastComicKey + currentVol, firstVolPage);
 		adjustControls();
 		myWebView.clearView();
 		myWebView.loadUrl(Globals.StartImageURL
@@ -326,7 +328,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	    // All objects are from android.context.Context
 	    SharedPreferences settings = getPreferences(0);
 	    SharedPreferences.Editor editor = settings.edit();
-	    editor.putInt("lastComic" + currentVol, currentPage);
+	    editor.putInt(lastComicKey + currentVol, currentPage);
 	    
 	    // Commit the edits!
 	    editor.commit();
