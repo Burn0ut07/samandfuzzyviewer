@@ -55,7 +55,8 @@ public class MainPage extends ListActivity {
 				buildHelpDialog(Globals.HelpTitle);
 			}
 		}
-		launchLastComic();
+		else
+			launchLastComic();
 	}
 	
 	/**
