@@ -17,9 +17,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.View.OnClickListener;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -29,7 +30,7 @@ import android.widget.Toast;
 import com.comic.globals.Globals;
 
 public class ComicViewer extends Activity implements OnClickListener {
-	private ProgressDialog loadingDialog;
+	public ProgressDialog loadingDialog;
 	private Button first, back, mainMenu, next, last;
 	private int firstVolPage, lastVolPage, currentPage, currentVol;
 	private WebView myWebView;
@@ -86,6 +87,13 @@ public class ComicViewer extends Activity implements OnClickListener {
 		//sets up image display and zoom
 		myWebView.setClickable(true);
 		final Activity activity = this;
+		final ComicViewer comicviewer = this;
+		myWebView.setWebChromeClient(new WebChromeClient() {
+			   public void onProgressChanged(WebView view, int progress) {
+				   		//sets progress dialog
+				   		comicviewer.setLoading(progress);
+				   }
+				 });
 		myWebView.setWebViewClient(new WebViewClient() {
 			public void onReceivedError(WebView view, int errorCode,
 					String description, String failingUrl) {
@@ -123,7 +131,8 @@ public class ComicViewer extends Activity implements OnClickListener {
 	 */
 	private void setupInitialView() {
 		SharedPreferences settings = getSharedPreferences("VOLUME_SAVES", 0);
-		currentPage = settings.getInt(lastComicKey + currentVol, firstVolPage);
+		if (settings != null)
+			currentPage = settings.getInt(lastComicKey + currentVol, firstVolPage);
 		displayNewView();
 	}
 
@@ -131,7 +140,6 @@ public class ComicViewer extends Activity implements OnClickListener {
 	 * Displays a new comic image to the view
 	 */
 	private void displayNewView() {
-		showLoading();
 		adjustControls();
 		myWebView.clearView();
 		String imageURL = Globals.StartImageURL 
@@ -140,7 +148,8 @@ public class ComicViewer extends Activity implements OnClickListener {
 		imageURL += in >= 0 ? Globals.guest_img_exts[in] : Globals.EndImageURL;
 		myWebView.loadUrl(imageURL);
 		setComicTitle();
-		doneLoading();
+		if (loadingDialog != null && loadingDialog.isShowing())
+			doneLoading();
 	}
 	
 	/**
@@ -333,11 +342,20 @@ public class ComicViewer extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * Displays loading dialog
+	 * Displays loading dialog with progress
 	 */
-	public void showLoading() {
-		loadingDialog = ProgressDialog
-				.show(this, "", "Loading. Please wait...");
+	public void setLoading(int progress) {
+		if (loadingDialog == null) {
+			loadingDialog = new ProgressDialog(this);
+			loadingDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+			loadingDialog.setMessage("Loading...Please wait");
+			loadingDialog.setCancelable(false);
+		}
+		if (!loadingDialog.isShowing())
+			loadingDialog.show();
+		loadingDialog.setProgress(progress);
+		if (progress == 100)
+			doneLoading();
 	}
 
 	/**
