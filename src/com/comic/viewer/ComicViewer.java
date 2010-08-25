@@ -3,6 +3,7 @@
  */
 package com.comic.viewer;
 
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -121,15 +122,9 @@ public class ComicViewer extends Activity implements OnClickListener {
 	 * Sets up the initial view, called when launched from main menu
 	 */
 	private void setupInitialView() {
-		showLoading();
 		SharedPreferences settings = getSharedPreferences("VOLUME_SAVES", 0);
 		currentPage = settings.getInt(lastComicKey + currentVol, firstVolPage);
-		adjustControls();
-		myWebView.clearView();
-		myWebView.loadUrl(Globals.StartImageURL
-				+ ComicUtils.zfill(currentPage, Globals.numZeros) + Globals.EndImageURL);
-		setComicTitle();
-		doneLoading();
+		displayNewView();
 	}
 
 	/**
@@ -139,8 +134,11 @@ public class ComicViewer extends Activity implements OnClickListener {
 		showLoading();
 		adjustControls();
 		myWebView.clearView();
-		myWebView.loadUrl(Globals.StartImageURL
-				+ ComicUtils.zfill(currentPage, Globals.numZeros) + Globals.EndImageURL);
+		String imageURL = Globals.StartImageURL 
+					+ ComicUtils.zfill(currentPage, Globals.numZeros);
+		int in = Arrays.binarySearch(Globals.guest_img_ids, currentPage);
+		imageURL += in >= 0 ? Globals.guest_img_exts[in] : Globals.EndImageURL;
+		myWebView.loadUrl(imageURL);
 		setComicTitle();
 		doneLoading();
 	}

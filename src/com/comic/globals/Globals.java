@@ -70,8 +70,15 @@ public class Globals {
 	public static final int MAX_VOLUMES = 6;
 	
 	/** Ids for guest comics which have a different image extension than gif */
-	public static final int[] guest_img_ids = {198, 202, 206, 366, 367, 371, 374, 481, 550, 552, 553,
-		554, 557, 710, 715, 718, 894, 897, 898, 899, 900, 1202, 1203, 1205, 1207, 1208, 1209, 1211};
+	public static final int[] guest_img_ids = {198, 202, 206, 366, 367, 371,
+		374, 481, 550, 552, 553, 554, 557, 710, 715, 718, 894, 897, 898, 899,
+		900, 1202, 1203, 1205, 1207, 1208, 1209, 1211};
+	
+	/** Image extensions for comics that aren't gif */
+	public static final String[] guest_img_exts = {"jpg", "jpg", "jpg", "jpg",
+		"jpg", "jpg", "jpg", "jpg", "png", "png", "jpg", "jpg", "png", "jpg",
+		"png", "png", "png", "jpg", "jpg", "jpg", "jpg", "jpg", "png", "png",
+		"jpg", "jpg", "jpg", "jpg"};
 	
 	public static final int HELP_ID = Menu.FIRST;
 	public static final int COPYRIGHT_ID = Menu.FIRST + 1;
