@@ -10,5 +10,7 @@
 		android:text="Sam And Fuzzy Viewer"
 		android:typeface="sans"
 		android:textStyle="bold"
+		android:layout_centerInParent="true"
+		android:gravity="center"
 		/>
 </RelativeLayout>
