@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	xmlns:android="http://schemas.android.com/apk/res/android">
+	<TextView
+		android:layout_width="fill_parent" 
+		android:layout_height="fill_parent"
+		android:textColor="#000000"
+		android:textSize="16sp"
+		android:text="Sam And Fuzzy Viewer"
+		android:typeface="sans"
+		android:textStyle="bold"
+		/>
+</RelativeLayout>
