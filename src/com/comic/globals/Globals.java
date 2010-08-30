@@ -8,7 +8,9 @@ import android.view.Menu;
 public class Globals {
 	public static final String VolZeroImage="http://samandfuzzy.com/imgint/volume0.gif";
 	public static final String VolZeroInfo="The first Sam and Fuzzy strips are a little rough " +
-			"around the edges, but are not without their hardcore advocates.";
+			"around the edges, but are not without their hardcore advocates. This is not the " +
+			"best place for new readers to start, but if you have enjoyed the rest of the " +
+			"archive, dive in here to see the comic's awkward-yet-lovable adolescence.";
 	public static final String VolZeroName="Volume 0: The Early Years";
 	public static final String VolOneImage="http://samandfuzzy.com/imgint/volume1.gif";
 	public static final String VolOneInfo="Enter Sam and Fuzzy's surreal world of dating disasters, " +

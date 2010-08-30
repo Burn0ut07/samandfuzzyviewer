@@ -7,9 +7,9 @@ import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -244,13 +245,39 @@ public class MainPage extends ListActivity {
 				holder.volumeDescription = (TextView) convertView
 						.findViewById(R.id.volumeDescription);
 				holder.volumeDescriptionBold = (TextView) convertView
-						.findViewById(R.id.volumeDiscriptionBold);
+						.findViewById(R.id.volumeDescriptionBold);
+				holder.volumeIcon = (ImageView) convertView
+						.findViewById(R.id.volumeIcon);
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
 			holder.volumeName.setText(volumeNames[position]);
 			holder.volumeDescription.setText(volumeInfo[position]);
+			switch(position){
+			case 0:
+				holder.volumeIcon.setImageResource(R.drawable.vol6);
+				break;
+			case 1:
+				holder.volumeIcon.setImageResource(R.drawable.vol5);
+				break;
+			case 2:
+				holder.volumeIcon.setImageResource(R.drawable.vol4);
+				break;
+			case 3:
+				holder.volumeIcon.setImageResource(R.drawable.vol3);
+				break;
+			case 4:
+				holder.volumeIcon.setImageResource(R.drawable.vol2);
+				break;
+			case 5:
+				holder.volumeIcon.setImageResource(R.drawable.vol1);
+				break;
+			case 6:
+				holder.volumeIcon.setImageResource(R.drawable.vol0);
+				break;
+			
+			}
 			if(position == 1) { //volume 5
 				holder.volumeDescriptionBold.setText(Globals.EndorseVolFive);
 			} else {
@@ -263,6 +290,7 @@ public class MainPage extends ListActivity {
 			TextView volumeName;
 			TextView volumeDescription;
 			TextView volumeDescriptionBold;
+			ImageView volumeIcon;
 		}
 
 		public Filter getFilter() {
