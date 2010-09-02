@@ -4,14 +4,17 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class NavBarListener implements AnimationListener {
 	
 	private RelativeLayout navbar;
+	private TextView navReplace;
 	
-	public NavBarListener(View navbar) {
+	public NavBarListener(View navbar, View navReplace) {
 		super();
 		this.navbar = (RelativeLayout)navbar;
+		this.navReplace = (TextView)navReplace;
 	}
 
 	/* (non-Javadoc)
@@ -20,6 +23,7 @@ public class NavBarListener implements AnimationListener {
 	@Override
 	public void onAnimationEnd(Animation animation) {
 		navbar.setVisibility(View.GONE);
+		navReplace.setVisibility(View.VISIBLE);
 	}
 
 	/* (non-Javadoc)

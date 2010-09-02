@@ -37,7 +37,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	private int firstVolPage, lastVolPage, currentPage, currentVol;
 	private WebView myWebView;
 	private TextView comicTitleView;
-	private View zoom, navbar; 
+	private View zoom, navbar, navReplace; 
 	private AlertDialog helpDialog;
 	private final String helpBundleKey = "helpDialogBundle", lastComicKey = "lastComic";
 	private static Pattern comicTitleRegex = 
@@ -50,8 +50,6 @@ public class ComicViewer extends Activity implements OnClickListener {
 		// sets up custom title bar
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.comicviewer);
-		//getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
-				//R.layout.comicviewertitlebar);
 		// sets up objects in view
 		setup();
 		//new instance
@@ -87,6 +85,8 @@ public class ComicViewer extends Activity implements OnClickListener {
 		comicTitleView = (TextView) findViewById(R.id.comictitle);
 		comicTitleView.setOnClickListener(this);
 		navbar = findViewById(R.id.navbar);
+		navReplace = findViewById(R.id.navreturn);
+		navReplace.setOnClickListener(this);
 		
 		//sets up image display and zoom
 		myWebView.setClickable(true);
@@ -177,7 +177,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	
 	private void fadeNavBar() {
 		Animation fadeout = AnimationUtils.loadAnimation(this, R.anim.fade_out);
-		fadeout.setAnimationListener(new NavBarListener(navbar));
+		fadeout.setAnimationListener(new NavBarListener(navbar, navReplace));
 		navbar.startAnimation(fadeout);
 	}
 
@@ -194,6 +194,10 @@ public class ComicViewer extends Activity implements OnClickListener {
 		} else if (v == mainMenu) {
 			finish();
 		} else if (v == comicTitleView) {
+			navReplace.setVisibility(View.GONE);
+			navbar.setVisibility(View.VISIBLE);
+		} else if (v == navReplace) {
+			navReplace.setVisibility(View.GONE);
 			navbar.setVisibility(View.VISIBLE);
 		}
 	}
