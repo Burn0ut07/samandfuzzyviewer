@@ -9,7 +9,7 @@
 		android:id="@+id/comicview">
 	<RelativeLayout android:id="@+id/navbar"
 		android:layout_width="fill_parent" android:layout_height="fill_parent"
-		android:background="#42426F">
+		android:background="#C6C7C6">
 		<TableLayout android:id="@+id/TableLayout01"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:layout_centerHorizontal="true">

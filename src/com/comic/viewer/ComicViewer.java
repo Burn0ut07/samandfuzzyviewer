@@ -200,13 +200,10 @@ public class ComicViewer extends Activity implements OnClickListener {
 			setupLastView();
 		} else if (v == mainMenu) {
 			finish();
-		} else if (v == comicTitleView) {
+		} else if (v == comicTitleView || v == navReplace) {
 			navReplace.setVisibility(View.GONE);
 			navbar.setVisibility(View.VISIBLE);
-		} else if (v == navReplace) {
-			navReplace.setVisibility(View.GONE);
-			navbar.setVisibility(View.VISIBLE);
-		}
+		} 
 	}
 
 	/**
