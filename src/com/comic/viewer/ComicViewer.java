@@ -15,6 +15,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -290,8 +291,9 @@ public class ComicViewer extends Activity implements OnClickListener {
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
 		//add menu options
-    	menu.add(Menu.NONE, Globals.HELP_ID, Menu.NONE, "Help");
-    	return super.onCreateOptionsMenu(menu);
+		MenuInflater inflater = getMenuInflater();
+    	inflater.inflate(R.menu.viewer_menu, menu);
+    	return true;
     }
 	
 	/**
@@ -312,7 +314,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	private boolean applyMenuChoice(MenuItem item) {
 		switch(item.getItemId())
 		{
-		case Globals.HELP_ID: //display help menu
+		case R.id.help: //display help menu
 			buildHelpDialog(Globals.HelpTitle);
 			return true;
 		}

@@ -13,6 +13,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -125,9 +126,9 @@ public class MainPage extends ListActivity {
 	 */
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
-    	menu.add(Menu.NONE, Globals.HELP_ID, Menu.NONE, "Help");
-    	menu.add(Menu.NONE, Globals.COPYRIGHT_ID, Menu.NONE, "Copyright");
-    	return super.onCreateOptionsMenu(menu);
+		MenuInflater inflater = getMenuInflater();
+    	inflater.inflate(R.menu.main_menu, menu);
+    	return true;
     }
 	
 	/**
@@ -147,10 +148,10 @@ public class MainPage extends ListActivity {
 	private boolean applyMenuChoice(MenuItem item) {
 		switch(item.getItemId())
 		{
-		case Globals.HELP_ID: //display help menu
+		case R.id.help: //display help menu
 			buildHelpDialog(Globals.HelpTitle);
 			return true;
-		case Globals.COPYRIGHT_ID: //display copyright information
+		case R.id.copyright: //display copyright information
 			buildCopyrightDialog(Globals.CopyrightTitle, Globals.CopyrightMessage);
 			return true;
 		}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/help"
+          android:icon="@drawable/help_icon"
+          android:title="Help" />
+    <item android:id="@+id/copyright"
+          android:icon="@drawable/info_icon"
+          android:title="Copyright" />
+</menu>
