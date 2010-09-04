@@ -87,6 +87,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 		comicTitleView = (TextView) findViewById(R.id.comictitle);
 		comicTitleView.setOnClickListener(this);
 		navbar = findViewById(R.id.navbar);
+		navbar.setOnClickListener(this);
 		navReplace = findViewById(R.id.navreturn);
 		navReplace.setOnClickListener(this);
 		
@@ -203,6 +204,8 @@ public class ComicViewer extends Activity implements OnClickListener {
 		} else if (v == comicTitleView || v == navReplace) {
 			navReplace.setVisibility(View.GONE);
 			navbar.setVisibility(View.VISIBLE);
+		} else if (v == navbar) {
+			fadeNavBar();
 		} 
 	}
 

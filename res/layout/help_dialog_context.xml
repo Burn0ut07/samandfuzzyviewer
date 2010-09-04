@@ -23,6 +23,23 @@ the comics into continuous series."
               />
     <TextView android:layout_width="fill_parent"
               android:layout_height="wrap_content"
+              android:text="The Nav Bar"
+              android:textSize="15sp"
+              android:textStyle="bold"
+              android:layout_marginBottom="3dip"
+              />
+	<TextView android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:text="Displays buttons that enable you to 
+navigate through the volume's comic pages. Initially fades and contracts to allow
+for an optimal reading view, but can be expanded by clicking the
+text where the nav bar once was. Can also be contracted again by clicking anywhere
+on the nav bar that is not a navigational button"
+              android:textSize="13sp"
+              android:layout_marginBottom="3dip"
+              />
+    <TextView android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
               android:text="The First button"
               android:textSize="15sp"
               android:textStyle="bold"
