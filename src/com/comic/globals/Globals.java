@@ -42,7 +42,9 @@ public class Globals {
 	public static final String VolFiveName="Volume 5: Sam and Fuzzy Fix Your Problem!";
 	public static final String VolSixName="Volume 6: Sam and Fuzzy Are Very Famous";
 	public static final String VolSixInfo="Sam continues to try to keep NMS " + 
-	                "afloat, as we begin to learn more about Fuzzy's mysterious past.";
+	                "afloat, as we begin to learn more about Fuzzy's mysterious past. " +
+	                "This is the most recent volume and is currently still in progress, "+
+	                "updating every Monday, Wednesday, and Friday.";
 	
 	public static final String StartImageURL = "http://samandfuzzy.com/comics/";
 	public static final String EndImageURL = ".gif";
