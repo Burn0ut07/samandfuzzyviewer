@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:id="@+id/mainmenu"
+          android:icon="@drawable/home_icon"
+          android:title="Main Menu" />
     <item android:id="@+id/help"
           android:icon="@drawable/help_icon"
           android:title="Help" />
+    <item android:id="@+id/store"
+          android:icon="@drawable/store_icon"
+          android:title="Store" />
 </menu>

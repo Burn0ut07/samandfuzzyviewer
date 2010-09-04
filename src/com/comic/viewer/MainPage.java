@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -153,6 +154,10 @@ public class MainPage extends ListActivity {
 			return true;
 		case R.id.copyright: //display copyright information
 			buildCopyrightDialog(Globals.CopyrightTitle, Globals.CopyrightMessage);
+			return true;
+		case R.id.store: //send user to store
+			startActivity(new Intent(Intent.ACTION_VIEW, 
+					Uri.parse(Globals.storeURL)));
 			return true;
 		}
 		return false;

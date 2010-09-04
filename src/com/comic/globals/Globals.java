@@ -73,6 +73,7 @@ public class Globals {
 	
 	public static final int numZeros = 8;
 	public static final int MAX_VOLUMES = 6;
+	public static final String storeURL = "http://www.topatoco.com/samandfuzzy";
 	
 	/** Ids for guest comics which have a different image extension than gif */
 	public static final int[] guest_img_ids = {198, 202, 206, 366, 367, 371,

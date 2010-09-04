@@ -66,14 +66,16 @@ on the nav bar that is not a navigational button"
               />
     <TextView android:layout_width="fill_parent"
               android:layout_height="wrap_content"
-              android:text="The Main Menu button"
+              android:text="The Number Text Box"
               android:textSize="15sp"
               android:textStyle="bold"
               android:layout_marginBottom="3dip"
               />
 	<TextView android:layout_width="fill_parent"
               android:layout_height="wrap_content"
-              android:text="Displays the main menu consisting of the entire list of volumes available."
+              android:text="Displays the current page of the comic. Also enables readers to 
+skip to any page in the volume, as long as it is within the range. The range of the volume 
+is displayed as a hint when the text field is empty."
               android:textSize="13sp"
               android:layout_marginBottom="3dip"
               />

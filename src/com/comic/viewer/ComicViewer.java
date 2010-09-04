@@ -11,8 +11,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,14 +24,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.View.OnClickListener;
-import android.webkit.WebChromeClient;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.TextView.OnEditorActionListener;
 
 import com.comic.globals.Globals;
 import com.comic.misc.ComicUtils;
@@ -36,7 +41,8 @@ import com.comic.misc.NavBarListener;
 
 public class ComicViewer extends Activity implements OnClickListener {
 	public ProgressDialog loadingDialog;
-	private Button first, back, mainMenu, next, last;
+	private Button first, back, next, last;
+	private EditText goto_vol_page;
 	private int firstVolPage, lastVolPage, currentPage, currentVol;
 	private WebView myWebView;
 	private TextView comicTitleView;
@@ -61,7 +67,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 			setupInitialView();
 		} else { //destroyed and recreated
 			currentPage = savedInstanceState.getInt("currentPage");
-			displayNewView();
+			displayNewView(currentPage);
 			if (savedInstanceState.getBundle(helpBundleKey) != null) {
 				//launch help dialog
 				buildHelpDialog(Globals.HelpTitle);
@@ -79,8 +85,16 @@ public class ComicViewer extends Activity implements OnClickListener {
 		first.setOnClickListener(this);
 		back = (Button) findViewById(R.id.back);
 		back.setOnClickListener(this);
-		mainMenu = (Button) findViewById(R.id.mainmenu);
-		mainMenu.setOnClickListener(this);
+		goto_vol_page = (EditText) findViewById(R.id.goto_vol_page);
+		goto_vol_page.setOnEditorActionListener(new OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId,
+                    KeyEvent event) {
+            	int num = Integer.valueOf(goto_vol_page.getText().toString());
+            	if (num != currentPage)
+            		displayNewView(num);
+                return false;
+            }
+        });
 		next = (Button) findViewById(R.id.next);
 		next.setOnClickListener(this);
 		last = (Button) findViewById(R.id.current);
@@ -132,6 +146,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 				.intValue();
 		lastVolPage = Integer.valueOf(range.substring(range.indexOf("-") + 1))
 				.intValue();
+		goto_vol_page.setHint(firstVolPage + " - " + lastVolPage);
 	}
 
 	/**
@@ -141,13 +156,20 @@ public class ComicViewer extends Activity implements OnClickListener {
 		SharedPreferences settings = getSharedPreferences("VOLUME_SAVES", 0);
 		if (settings != null)
 			currentPage = settings.getInt(lastComicKey + currentVol, firstVolPage);
-		displayNewView();
+		displayNewView(currentPage);
 	}
 	
 	/**
 	 * Displays a new comic image to the view
 	 */
-	private void displayNewView() {
+	private void displayNewView(int pageToView) {
+		if (pageToView < firstVolPage || pageToView > lastVolPage){
+			displayError("Please enter a valid page number");
+			goto_vol_page.setText("");
+			return;
+		}
+		currentPage = pageToView;
+		goto_vol_page.setText(String.valueOf(currentPage));
 		adjustControls();
 		myWebView.clearView();
 		String imageURL = Globals.StartImageURL 
@@ -200,7 +222,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 			setupFirstView();
 		} else if (v == last) {
 			setupLastView();
-		} else if (v == mainMenu) {
+		} else if (v == goto_vol_page) {
 			finish();
 		} else if (v == comicTitleView || v == navReplace) {
 			navReplace.setVisibility(View.GONE);
@@ -214,16 +236,14 @@ public class ComicViewer extends Activity implements OnClickListener {
 	 * Setups for displaying of next immediate view
 	 */
 	private void setupNextView() {
-		++currentPage;
-		displayNewView();
+		displayNewView(++currentPage);
 	}
 
 	/**
 	 * Setups for displaying of previous immediate view
 	 */
 	private void setupPrevView() {
-		--currentPage;
-		displayNewView();
+		displayNewView(--currentPage);
 	}
 
 	/**
@@ -231,7 +251,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	 */
 	private void setupFirstView() {
 		currentPage = firstVolPage;
-		displayNewView();
+		displayNewView(currentPage);
 	}
 
 	/**
@@ -239,7 +259,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	 */
 	private void setupLastView() {
 		currentPage = lastVolPage;
-		displayNewView();
+		displayNewView(currentPage);
 	}
 
 	/**
@@ -316,6 +336,13 @@ public class ComicViewer extends Activity implements OnClickListener {
 		{
 		case R.id.help: //display help menu
 			buildHelpDialog(Globals.HelpTitle);
+			return true;
+		case R.id.mainmenu: //go back to main menu
+			finish();
+			return true;
+		case R.id.store: //send user to store
+			startActivity(new Intent(Intent.ACTION_VIEW, 
+					Uri.parse(Globals.storeURL)));
 			return true;
 		}
 		return false;
@@ -394,6 +421,18 @@ public class ComicViewer extends Activity implements OnClickListener {
 	 */
 	public void doneLoading() {
 		loadingDialog.dismiss();
+	}
+	
+	public void displayError(String message) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(message)
+		.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+		});
+		builder.create().show();
 	}
 	
 }

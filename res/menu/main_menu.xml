@@ -6,4 +6,7 @@
     <item android:id="@+id/copyright"
           android:icon="@drawable/info_icon"
           android:title="Copyright" />
+    <item android:id="@+id/store"
+          android:icon="@drawable/store_icon"
+          android:title="Store" />
 </menu>
