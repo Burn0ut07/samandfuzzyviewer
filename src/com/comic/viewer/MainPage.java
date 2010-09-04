@@ -239,6 +239,7 @@ public class MainPage extends ListActivity {
 			mInflater = LayoutInflater.from(context);
 		}
 		
+		@Override
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			ViewHolder holder;
 			if (convertView == null) {
@@ -285,7 +286,12 @@ public class MainPage extends ListActivity {
 				break;
 			
 			}
-			if(position == 1) { //volume 5
+			if (position == 1) { //volume 5
+				holder.volumeDescriptionBold.setVisibility(View.VISIBLE);
+				holder.volumeDescriptionBold.setText(Globals.EndorseVolFive);
+			}
+			else if(holder.volumeName.equals(volumeNames[1])) { //volume 5
+				holder.volumeDescriptionBold.setVisibility(View.VISIBLE);
 				holder.volumeDescriptionBold.setText(Globals.EndorseVolFive);
 			} else {
 				holder.volumeDescriptionBold.setVisibility(View.GONE);
