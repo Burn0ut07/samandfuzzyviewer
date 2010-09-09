@@ -15,15 +15,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.WebChromeClient;
@@ -32,16 +33,16 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.comic.globals.Globals;
 import com.comic.misc.ComicUtils;
 import com.comic.misc.NavBarListener;
-
+	
 public class ComicViewer extends Activity implements OnClickListener {
 	public ProgressDialog loadingDialog;
-	private Button first, back, next, last;
+	private Button first, back, next, last, news;
 	private EditText goto_vol_page;
 	private int firstVolPage, lastVolPage, currentPage, currentVol;
 	private WebView myWebView;
@@ -49,8 +50,11 @@ public class ComicViewer extends Activity implements OnClickListener {
 	private View zoom, navbar, navReplace; 
 	private AlertDialog helpDialog;
 	private final String helpBundleKey = "helpDialogBundle", lastComicKey = "lastComic";
+	private String comicSrc;
 	private static Pattern comicTitleRegex = 
 		Pattern.compile("http://samandfuzzy.com/comics/.+?alt=\"(.+?)\"");
+	private static Pattern newspostRegex = 
+		Pattern.compile("(?s)<!-+Newspost body-+>.+<br/>(.+)</td>\\s+<td width=\"10\">");
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -99,6 +103,8 @@ public class ComicViewer extends Activity implements OnClickListener {
 		next.setOnClickListener(this);
 		last = (Button) findViewById(R.id.current);
 		last.setOnClickListener(this);
+		news = (Button) findViewById(R.id.newspost);
+		news.setOnClickListener(this);
 		comicTitleView = (TextView) findViewById(R.id.comictitle);
 		comicTitleView.setOnClickListener(this);
 		navbar = findViewById(R.id.navbar);
@@ -177,7 +183,8 @@ public class ComicViewer extends Activity implements OnClickListener {
 		int in = Arrays.binarySearch(Globals.guest_img_ids, currentPage);
 		imageURL += in >= 0 ? Globals.guest_img_exts[in] : Globals.EndImageURL;
 		myWebView.loadUrl(imageURL);
-		setComicTitle();
+		comicSrc = ComicUtils.getHTTPSource("http://samandfuzzy.com/" + currentPage);
+		setComicTitle(comicSrc);
 		if (loadingDialog != null && loadingDialog.isShowing())
 			doneLoading();
 		fadeNavBar();
@@ -186,8 +193,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	/**
 	 * Sets the comic title to the current page
 	 */
-	private void setComicTitle() {
-		String comicSource = ComicUtils.getHTTPSource("http://samandfuzzy.com/" + currentPage);
+	private void setComicTitle(String comicSource) {
 		Matcher m = comicTitleRegex.matcher(comicSource);
 		m.find();
 		String comicTitle = m.group(1);
@@ -229,7 +235,11 @@ public class ComicViewer extends Activity implements OnClickListener {
 			navbar.setVisibility(View.VISIBLE);
 		} else if (v == navbar) {
 			fadeNavBar();
-		} 
+		} else if (v == news) {
+			Matcher m = newspostRegex.matcher(comicSrc);
+			m.find();
+			myWebView.loadData(m.group(1), "text/html", "utf-8");//, null);
+		}
 	}
 
 	/**
