@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
@@ -30,7 +32,7 @@ import android.widget.Toast;
 import com.comic.globals.Globals;
 import com.comic.misc.ComicUtils;
 
-public class MainPage extends ListActivity {
+public class MainPage extends ListActivity implements android.view.View.OnClickListener {
 	//list of volume names
 	private String[] volumeNames = {Globals.VolSixName, Globals.VolFiveName, 
 			Globals.VolFourName, Globals.VolThreeName, 
@@ -42,6 +44,7 @@ public class MainPage extends ListActivity {
 	private final String copyrightBundleKey = "copyrightDialogBundle";
 	private final String helpBundleKey = "helpDialogBundle";
 	private AlertDialog copyrightDialog, helpDialog;
+	private Button currentComic;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,10 @@ public class MainPage extends ListActivity {
 		setContentView(R.layout.main);
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
 				R.layout.mainmenutitlebar);
+		
+		currentComic = (Button) findViewById(R.id.current_comic);
+		currentComic.setOnClickListener(this);
+		currentComic.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/handvetica.ttf"));
 		
 		//set the main menu list
 		setListAdapter(new ListVolumesAdapter(this));
@@ -67,6 +74,13 @@ public class MainPage extends ListActivity {
 		}
 		else
 			launchLastComic();
+	}
+	
+	@Override
+	public void onClick(View v) {
+		if (v == currentComic){ //launch most recent comic
+			
+		}
 	}
 	
 	/**

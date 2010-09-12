@@ -12,6 +12,14 @@
         android:textSize="14dip"
         android:textColor="#ffffff"
     	/>
+    <Button
+    	android:id="@+id/current_comic"
+    	android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dip"
+        android:textSize="20sp"
+        android:text="Click here to continue reading"
+    	/>
     <ListView 
         android:id="@+id/android:list" 
         android:layout_width="fill_parent"
