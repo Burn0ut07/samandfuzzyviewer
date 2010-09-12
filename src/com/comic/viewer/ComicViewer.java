@@ -13,6 +13,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -124,6 +125,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 			}
 		});
 		myWebView.requestFocus();
+		myWebView.setBackgroundColor(Color.BLACK);
 		zoom = myWebView.getZoomControls();
 		zoom.setVisibility(View.VISIBLE);
 		myWebView.getSettings().setBuiltInZoomControls(true);
@@ -181,6 +183,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 		if (loadingDialog != null && loadingDialog.isShowing())
 			doneLoading();
 		fadeNavBar();
+		myWebView.setInitialScale(70);
 	}
 	
 	/**
@@ -397,6 +400,15 @@ public class ComicViewer extends Activity implements OnClickListener {
 	    
 	    // Commit the edits!
 	    editor.commit();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if (myWebView != null){
+			myWebView.clearCache(true);
+			myWebView.clearHistory();
+		}
 	}
 
 	/**
