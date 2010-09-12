@@ -41,7 +41,7 @@ import com.comic.misc.NavBarListener;
 
 public class ComicViewer extends Activity implements OnClickListener {
 	public ProgressDialog loadingDialog;
-	private Button first, back, next, last, news;
+	private Button first, back, next, last;
 	private EditText goto_vol_page;
 	private int firstVolPage, lastVolPage, currentPage, currentVol;
 	private WebView myWebView;
@@ -104,8 +104,6 @@ public class ComicViewer extends Activity implements OnClickListener {
 		next.setOnClickListener(this);
 		last = (Button) findViewById(R.id.current);
 		last.setOnClickListener(this);
-		news = (Button) findViewById(R.id.newspost);
-		news.setOnClickListener(this);
 		comicTitleView = (TextView) findViewById(R.id.comictitle);
 		comicTitleView.setOnClickListener(this);
 		navbar = findViewById(R.id.navbar);
@@ -240,11 +238,6 @@ public class ComicViewer extends Activity implements OnClickListener {
 			navbar.setVisibility(View.VISIBLE);
 		} else if (v == navbar) {
 			fadeNavBar();
-		} else if (v == news) {
-			Matcher m = newspostRegex.matcher(comicSrc);
-			m.find();
-			myWebView.loadDataWithBaseURL("http://samandfuzzy.com", m.group(1),
-					"text/html", "utf-8", null);
 		}
 	}
 
@@ -358,6 +351,12 @@ public class ComicViewer extends Activity implements OnClickListener {
 		case R.id.store: // send user to store
 			startActivity(new Intent(Intent.ACTION_VIEW,
 					Uri.parse(Globals.storeURL)));
+			return true;
+		case R.id.newspost:
+			Matcher m = newspostRegex.matcher(comicSrc);
+			m.find();
+			myWebView.loadDataWithBaseURL("http://samandfuzzy.com", m.group(1),
+					"text/html", "utf-8", null);
 			return true;
 		}
 		return false;
