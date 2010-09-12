@@ -4,7 +4,6 @@
 package com.comic.viewer;
 
 import java.util.Arrays;
-import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,7 +15,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -40,7 +38,7 @@ import android.widget.Toast;
 import com.comic.globals.Globals;
 import com.comic.misc.ComicUtils;
 import com.comic.misc.NavBarListener;
-	
+
 public class ComicViewer extends Activity implements OnClickListener {
 	public ProgressDialog loadingDialog;
 	private Button first, back, next, last, news;
@@ -48,43 +46,45 @@ public class ComicViewer extends Activity implements OnClickListener {
 	private int firstVolPage, lastVolPage, currentPage, currentVol;
 	private WebView myWebView;
 	private TextView comicTitleView;
-	private View zoom, navbar, navReplace; 
+	private View zoom, navbar, navReplace;
 	private AlertDialog helpDialog;
-	private final String helpBundleKey = "helpDialogBundle", lastComicKey = "lastComic";
+	private final String helpBundleKey = "helpDialogBundle",
+			lastComicKey = "lastComic";
 	private String comicSrc;
-	private static Pattern comicTitleRegex = 
-		Pattern.compile("http://samandfuzzy.com/comics/.+?alt=\"(.+?)\"");
-	private static Pattern newspostRegex = 
-		Pattern.compile("(?s)<!-+Newspost body-+>.+<br/>(.+)</td>.+?<td width=\"10\">");
-	
+	private static Pattern comicTitleRegex = Pattern
+			.compile("http://samandfuzzy.com/comics/.+?alt=\"(.+?)\"");
+	private static Pattern newspostRegex = Pattern
+			.compile("(?s)<!-+Newspost body-+>.+<br/>(.+)</td>.+?<td width=\"10\">");
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		// sets up custom title bar
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.comicviewer);
 		// sets up objects in view
 		setup();
-		//new instance
+		// new instance
 		if (savedInstanceState == null) {
-			//sets up first view to display
+			// sets up first view to display
 			setupInitialView();
-		} else { //destroyed and recreated
+		} else { // destroyed and recreated
 			currentPage = savedInstanceState.getInt("currentPage");
 			displayNewView(currentPage);
 			if (savedInstanceState.getBundle(helpBundleKey) != null) {
-				//launch help dialog
+				// launch help dialog
 				buildHelpDialog(Globals.HelpTitle);
 			}
 		}
 	}
 
 	/**
-	 * Initial startup consisting of setting up of xml instances and zoom controls
+	 * Initial startup consisting of setting up of xml instances and zoom
+	 * controls
 	 */
 	public void setup() {
-		//gets instances from xml
+		// gets instances from xml
 		myWebView = (WebView) findViewById(R.id.webView);
 		first = (Button) findViewById(R.id.start);
 		first.setOnClickListener(this);
@@ -92,14 +92,14 @@ public class ComicViewer extends Activity implements OnClickListener {
 		back.setOnClickListener(this);
 		goto_vol_page = (EditText) findViewById(R.id.goto_vol_page);
 		goto_vol_page.setOnEditorActionListener(new OnEditorActionListener() {
-            public boolean onEditorAction(TextView v, int actionId,
-                    KeyEvent event) {
-            	int num = Integer.valueOf(goto_vol_page.getText().toString());
-            	if (num != currentPage)
-            		displayNewView(num);
-                return false;
-            }
-        });
+			public boolean onEditorAction(TextView v, int actionId,
+					KeyEvent event) {
+				int num = Integer.valueOf(goto_vol_page.getText().toString());
+				if (num != currentPage)
+					displayNewView(num);
+				return false;
+			}
+		});
 		next = (Button) findViewById(R.id.next);
 		next.setOnClickListener(this);
 		last = (Button) findViewById(R.id.current);
@@ -112,17 +112,17 @@ public class ComicViewer extends Activity implements OnClickListener {
 		navbar.setOnClickListener(this);
 		navReplace = findViewById(R.id.navreturn);
 		navReplace.setOnClickListener(this);
-		
-		//sets up image display and zoom
+
+		// sets up image display and zoom
 		myWebView.setClickable(true);
 		final Activity activity = this;
 		final ComicViewer comicviewer = this;
 		myWebView.setWebChromeClient(new WebChromeClient() {
-			   public void onProgressChanged(WebView view, int progress) {
-				   		//sets progress dialog
-				   		comicviewer.setLoading(progress);
-				   }
-				 });
+			public void onProgressChanged(WebView view, int progress) {
+				// sets progress dialog
+				comicviewer.setLoading(progress);
+			}
+		});
 		myWebView.setWebViewClient(new WebViewClient() {
 			public void onReceivedError(WebView view, int errorCode,
 					String description, String failingUrl) {
@@ -134,7 +134,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 		zoom = myWebView.getZoomControls();
 		zoom.setVisibility(View.VISIBLE);
 		myWebView.getSettings().setBuiltInZoomControls(true);
-		
+
 		// get volume range
 		Bundle bundle = getIntent().getExtras();
 		// sets up the range of this volume
@@ -145,8 +145,8 @@ public class ComicViewer extends Activity implements OnClickListener {
 	/**
 	 * Calculates the range for this specific volume
 	 * 
-	 * @param range 
-	 * 				The specified range in String format
+	 * @param range
+	 *            The specified range in String format
 	 */
 	public void setThisVolumeRange(String range) {
 		firstVolPage = Integer.valueOf(range.substring(0, range.indexOf("-")))
@@ -162,15 +162,16 @@ public class ComicViewer extends Activity implements OnClickListener {
 	private void setupInitialView() {
 		SharedPreferences settings = getSharedPreferences("VOLUME_SAVES", 0);
 		if (settings != null)
-			currentPage = settings.getInt(lastComicKey + currentVol, firstVolPage);
+			currentPage = settings.getInt(lastComicKey + currentVol,
+					firstVolPage);
 		displayNewView(currentPage);
 	}
-	
+
 	/**
 	 * Displays a new comic image to the view
 	 */
 	private void displayNewView(int pageToView) {
-		if (pageToView < firstVolPage || pageToView > lastVolPage){
+		if (pageToView < firstVolPage || pageToView > lastVolPage) {
 			displayError("Please enter a valid page number");
 			goto_vol_page.setText("");
 			return;
@@ -179,18 +180,19 @@ public class ComicViewer extends Activity implements OnClickListener {
 		goto_vol_page.setText(String.valueOf(currentPage));
 		adjustControls();
 		myWebView.clearView();
-		String imageURL = Globals.StartImageURL 
-					+ ComicUtils.zfill(currentPage, Globals.numZeros);
+		String imageURL = Globals.StartImageURL
+				+ ComicUtils.zfill(currentPage, Globals.numZeros);
 		int in = Arrays.binarySearch(Globals.guest_img_ids, currentPage);
 		imageURL += in >= 0 ? Globals.guest_img_exts[in] : Globals.EndImageURL;
 		myWebView.loadUrl(imageURL);
-		comicSrc = ComicUtils.getHTTPSource("http://samandfuzzy.com/" + currentPage);
+		comicSrc = ComicUtils.getHTTPSource("http://samandfuzzy.com/"
+				+ currentPage);
 		setComicTitle(comicSrc);
 		if (loadingDialog != null && loadingDialog.isShowing())
 			doneLoading();
 		fadeNavBar();
 	}
-	
+
 	/**
 	 * Sets the comic title to the current page
 	 */
@@ -198,12 +200,14 @@ public class ComicViewer extends Activity implements OnClickListener {
 		Matcher m = comicTitleRegex.matcher(comicSource);
 		m.find();
 		String comicTitle = m.group(1);
-		if(!Character.isLetter(comicTitle.charAt(0)))
+		if (!Character.isLetter(comicTitle.charAt(0)))
 			comicTitle = comicTitle.substring(3, comicTitle.length() - 4);
 		comicTitleView.setText("Volume " + currentVol + " - " + comicTitle);
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onResume()
 	 */
 	@Override
@@ -212,7 +216,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 		super.onResume();
 		fadeNavBar();
 	}
-	
+
 	private void fadeNavBar() {
 		Animation fadeout = AnimationUtils.loadAnimation(this, R.anim.fade_out);
 		fadeout.setAnimationListener(new NavBarListener(navbar, navReplace));
@@ -239,11 +243,8 @@ public class ComicViewer extends Activity implements OnClickListener {
 		} else if (v == news) {
 			Matcher m = newspostRegex.matcher(comicSrc);
 			m.find();
-			String[] toLoadA = m.group(1).split("\r\n");
-			StringBuilder sb = new StringBuilder();
-			for(int i = 0; i < toLoadA.length; i++)
-				sb.append(toLoadA[i] + "\n");
-			myWebView.loadData(sb.toString(), "text/html", "utf-8");//, null);
+			myWebView.loadDataWithBaseURL("http://samandfuzzy.com", m.group(1),
+					"text/html", "utf-8", null);
 		}
 	}
 
@@ -319,63 +320,63 @@ public class ComicViewer extends Activity implements OnClickListener {
 			last.setFocusable(false);
 		}
 	}
-	
+
 	/**
 	 * Used to create an options menu
 	 */
 	@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-		//add menu options
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// add menu options
 		MenuInflater inflater = getMenuInflater();
-    	inflater.inflate(R.menu.viewer_menu, menu);
-    	return true;
-    }
-	
+		inflater.inflate(R.menu.viewer_menu, menu);
+		return true;
+	}
+
 	/**
 	 * Called when an option is selected
 	 */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-    	return (applyMenuChoice(item) || super.onOptionsItemSelected(item));
-    }
-    
-    /**
-     * Performs the action on a selected item choice
-     * 
-     * @param item The id of the item selected
-     * @return true if the item selected was performed
-     */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		return (applyMenuChoice(item) || super.onOptionsItemSelected(item));
+	}
+
+	/**
+	 * Performs the action on a selected item choice
+	 * 
+	 * @param item
+	 *            The id of the item selected
+	 * @return true if the item selected was performed
+	 */
 	private boolean applyMenuChoice(MenuItem item) {
-		switch(item.getItemId())
-		{
-		case R.id.help: //display help menu
+		switch (item.getItemId()) {
+		case R.id.help: // display help menu
 			buildHelpDialog(Globals.HelpTitle);
 			return true;
-		case R.id.mainmenu: //go back to main menu
+		case R.id.mainmenu: // go back to main menu
 			finish();
 			return true;
-		case R.id.store: //send user to store
-			startActivity(new Intent(Intent.ACTION_VIEW, 
+		case R.id.store: // send user to store
+			startActivity(new Intent(Intent.ACTION_VIEW,
 					Uri.parse(Globals.storeURL)));
 			return true;
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Builds an help alert dialog displaying a title and message
 	 * 
-	 * @param title The title of the alert dialog
+	 * @param title
+	 *            The title of the alert dialog
 	 */
 	private void buildHelpDialog(String title) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		//inflate view for setting of content
+		// inflate view for setting of content
 		LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 		View layout = inflater.inflate(R.layout.help_dialog_context,
-                (ViewGroup) findViewById(R.id.layout_root));
-		builder.setTitle(title); //sets title
-		builder.setView(layout); //sets content
+				(ViewGroup) findViewById(R.id.layout_root));
+		builder.setTitle(title); // sets title
+		builder.setView(layout); // sets content
 		builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -383,35 +384,36 @@ public class ComicViewer extends Activity implements OnClickListener {
 			}
 		});
 		helpDialog = builder.create();
-		helpDialog.show(); //display
+		helpDialog.show(); // display
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putInt("currentPage", currentPage);
-		if (helpDialog != null && helpDialog.isShowing()){
-			//save help dialog if screen orientation changed
+		if (helpDialog != null && helpDialog.isShowing()) {
+			// save help dialog if screen orientation changed
 			outState.putBundle(helpBundleKey, helpDialog.onSaveInstanceState());
 		}
 		super.onSaveInstanceState(outState);
 	}
-	
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onStop()
 	 */
 	@Override
 	protected void onStop() {
 		super.onStop();
-		
+
 		// We need an Editor object to make preference changes.
-	    // All objects are from android.context.Context
-	    SharedPreferences settings = getSharedPreferences("VOLUME_SAVES", 0);
-	    SharedPreferences.Editor editor = settings.edit();
-	    editor.putInt(lastComicKey + currentVol, currentPage);
-	    
-	    // Commit the edits!
-	    editor.commit();
+		// All objects are from android.context.Context
+		SharedPreferences settings = getSharedPreferences("VOLUME_SAVES", 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putInt(lastComicKey + currentVol, currentPage);
+
+		// Commit the edits!
+		editor.commit();
 	}
 
 	/**
@@ -437,17 +439,17 @@ public class ComicViewer extends Activity implements OnClickListener {
 	public void doneLoading() {
 		loadingDialog.dismiss();
 	}
-	
+
 	public void displayError(String message) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(message)
-		.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.cancel();
-			}
-		});
+		builder.setMessage(message).setNegativeButton("Ok",
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
+					}
+				});
 		builder.create().show();
 	}
-	
+
 }
