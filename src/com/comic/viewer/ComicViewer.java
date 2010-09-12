@@ -4,6 +4,7 @@
 package com.comic.viewer;
 
 import java.util.Arrays;
+import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,7 +55,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	private static Pattern comicTitleRegex = 
 		Pattern.compile("http://samandfuzzy.com/comics/.+?alt=\"(.+?)\"");
 	private static Pattern newspostRegex = 
-		Pattern.compile("(?s)<!-+Newspost body-+>.+<br/>(.+)</td>\\s+<td width=\"10\">");
+		Pattern.compile("(?s)<!-+Newspost body-+>.+<br/>(.+)</td>.+?<td width=\"10\">");
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -238,7 +239,11 @@ public class ComicViewer extends Activity implements OnClickListener {
 		} else if (v == news) {
 			Matcher m = newspostRegex.matcher(comicSrc);
 			m.find();
-			myWebView.loadData(m.group(1), "text/html", "utf-8");//, null);
+			String[] toLoadA = m.group(1).split("\r\n");
+			StringBuilder sb = new StringBuilder();
+			for(int i = 0; i < toLoadA.length; i++)
+				sb.append(toLoadA[i] + "\n");
+			myWebView.loadData(sb.toString(), "text/html", "utf-8");//, null);
 		}
 	}
 
