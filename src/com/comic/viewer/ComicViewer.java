@@ -16,15 +16,16 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.WebChromeClient;
@@ -33,8 +34,8 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.comic.globals.Globals;
 import com.comic.misc.ComicUtils;
@@ -194,8 +195,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 		Matcher m = comicTitleRegex.matcher(comicSource);
 		m.find();
 		String comicTitle = m.group(1);
-		if(!Character.isLetter(comicTitle.charAt(0)))
-			comicTitle = comicTitle.substring(3, comicTitle.length() - 4);
+		comicTitle = Html.fromHtml(comicTitle).toString();
 		comicTitleView.setText("Volume " + currentVol + " - " + comicTitle);
 	}
 	
@@ -392,14 +392,16 @@ public class ComicViewer extends Activity implements OnClickListener {
 	protected void onStop() {
 		super.onStop();
 		
-		// We need an Editor object to make preference changes.
-	    // All objects are from android.context.Context
-	    SharedPreferences settings = getSharedPreferences("VOLUME_SAVES", 0);
-	    SharedPreferences.Editor editor = settings.edit();
-	    editor.putInt(lastComicKey + currentVol, currentPage);
+		if(currentPage != firstVolPage) {
+			// We need an Editor object to make preference changes.
+		    // All objects are from android.context.Context
+	    	SharedPreferences settings = getSharedPreferences("VOLUME_SAVES", 0);
+	    	SharedPreferences.Editor editor = settings.edit();
+	    	editor.putInt(lastComicKey + currentVol, currentPage);
 	    
-	    // Commit the edits!
-	    editor.commit();
+	    	// Commit the edits!
+	    	editor.commit();
+		}
 	}
 
 	@Override
