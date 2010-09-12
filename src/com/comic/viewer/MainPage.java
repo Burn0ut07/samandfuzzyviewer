@@ -45,6 +45,7 @@ public class MainPage extends ListActivity implements android.view.View.OnClickL
 	private final String helpBundleKey = "helpDialogBundle";
 	private AlertDialog copyrightDialog, helpDialog;
 	private Button currentComic;
+	private TextView header;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -59,6 +60,8 @@ public class MainPage extends ListActivity implements android.view.View.OnClickL
 		currentComic = (Button) findViewById(R.id.current_comic);
 		currentComic.setOnClickListener(this);
 		currentComic.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/handvetica.ttf"));
+		header = (TextView) findViewById(R.id.header);
+		header.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/handvetica.ttf"));
 		
 		//set the main menu list
 		setListAdapter(new ListVolumesAdapter(this));
@@ -79,7 +82,16 @@ public class MainPage extends ListActivity implements android.view.View.OnClickL
 	@Override
 	public void onClick(View v) {
 		if (v == currentComic){ //launch most recent comic
-			
+			SharedPreferences settings = getSharedPreferences("VOLUME_SAVES", 0);
+			if (settings != null){
+		    	SharedPreferences.Editor editor = settings.edit();
+		    	editor.putInt(Globals.lastComicKey + String.valueOf(Globals.MAX_VOLUMES), 
+		    			ComicUtils.lastVolumePage(Globals.MAX_VOLUMES));
+		    
+		    	// Commit the edits!
+		    	editor.commit();
+		    	launchVolume(0); //most recent comic is at index 0
+			}
 		}
 	}
 	

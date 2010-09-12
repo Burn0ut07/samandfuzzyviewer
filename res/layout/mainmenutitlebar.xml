@@ -3,14 +3,16 @@
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	xmlns:android="http://schemas.android.com/apk/res/android">
 	<TextView
+		android:id="@+id/header"
 		android:layout_width="fill_parent" 
 		android:layout_height="fill_parent"
 		android:textColor="#000000"
 		android:textSize="16sp"
 		android:text="Sam And Fuzzy Viewer"
-		android:typeface="sans"
 		android:textStyle="bold"
-		android:layout_centerInParent="true"
-		android:gravity="center"
+		android:layout_centerVertical="true"
+		android:gravity="left"
+		android:layout_marginLeft="5dip"
+		android:layout_marginTop="2dip"
 		/>
 </RelativeLayout>

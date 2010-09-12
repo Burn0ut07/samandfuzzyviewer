@@ -82,21 +82,37 @@ public class ComicUtils {
 			z_filled = "0" + z_filled;
 		return z_filled;
 	}
-	
+
 	/**
-	 * Returns a String of the range for the latest volume
-	 * @param currVol TODO
+	 * Gets the range for the latest volume
+	 * 
+	 * @param volume
+	 *            the most recent volume
 	 * 
 	 * @return String range of latest volume
 	 */
-	public static String lastVolumeRange(int currVol) {
-		String volRange = Globals.VOL_RANGES[currVol],
-		src = ComicUtils.getHTTPSource("http://samandfuzzy.com");
+	public static String lastVolumeRange(int volume) {
+		String volRange = Globals.VOL_RANGES[volume], src = ComicUtils
+				.getHTTPSource("http://samandfuzzy.com");
 		Matcher m = Pattern.compile(Globals.StartImageURL + "0+([0-9]+)")
-													.matcher(src);
+				.matcher(src);
 		m.find();
 		volRange += ("-" + m.group(1));
 		return volRange;
+	}
+
+	/**
+	 * Gets the index of the most recent comic
+	 * 
+	 * @param volume
+	 *            The most recent volume
+	 * @return the index of the most recent comic
+	 */
+	public static int lastVolumePage(int volume) {
+		Matcher m = Pattern.compile(Globals.StartImageURL + "0+([0-9]+)")
+				.matcher(ComicUtils.getHTTPSource("http://samandfuzzy.com"));
+		m.find();
+		return Integer.valueOf(m.group(1));
 	}
 
 }

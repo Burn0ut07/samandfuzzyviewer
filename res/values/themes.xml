@@ -5,7 +5,7 @@
 		<item name="android:windowTitleBackgroundStyle">@style/WindowTitleBackground1</item>
 	</style>
 	<style name="mainMenuTheme" parent="android:Theme">
-		<item name="android:windowTitleSize">26dip</item>
+		<item name="android:windowTitleSize">24dip</item>
 		<item name="android:windowTitleBackgroundStyle">@style/WindowTitleBackground2</item>
 	</style>
 </resources>

@@ -50,7 +50,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	private TextView comicTitleView;
 	private View zoom, navbar, navReplace; 
 	private AlertDialog helpDialog;
-	private final String helpBundleKey = "helpDialogBundle", lastComicKey = "lastComic";
+	private final String helpBundleKey = "helpDialogBundle";
 	private static Pattern comicTitleRegex = 
 		Pattern.compile("http://samandfuzzy.com/comics/.+?alt=\"(.+?)\"");
 	
@@ -158,7 +158,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	private void setupInitialView() {
 		SharedPreferences settings = getSharedPreferences("VOLUME_SAVES", 0);
 		if (settings != null)
-			currentPage = settings.getInt(lastComicKey + currentVol, firstVolPage);
+			currentPage = settings.getInt(Globals.lastComicKey + currentVol, firstVolPage);
 		displayNewView(currentPage);
 	}
 	
@@ -397,7 +397,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 		    // All objects are from android.context.Context
 	    	SharedPreferences settings = getSharedPreferences("VOLUME_SAVES", 0);
 	    	SharedPreferences.Editor editor = settings.edit();
-	    	editor.putInt(lastComicKey + currentVol, currentPage);
+	    	editor.putInt(Globals.lastComicKey + currentVol, currentPage);
 	    
 	    	// Commit the edits!
 	    	editor.commit();

@@ -4,21 +4,15 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-    <TextView
-    	android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="1dip"
-        android:text="Main Menu"
-        android:textSize="14dip"
-        android:textColor="#ffffff"
-    	/>
     <Button
     	android:id="@+id/current_comic"
     	android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dip"
-        android:textSize="20sp"
-        android:text="Click here to continue reading"
+        android:layout_marginTop="15dip"
+        android:layout_marginLeft="15dip"
+        android:layout_marginRight="15dip"
+        android:textSize="22sp"
+        android:text="Go to the Most Recent Comic!"
     	/>
     <ListView 
         android:id="@+id/android:list" 
