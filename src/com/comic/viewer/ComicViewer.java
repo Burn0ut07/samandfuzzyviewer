@@ -63,18 +63,8 @@ public class ComicViewer extends Activity implements OnClickListener {
 		setContentView(R.layout.comicviewer);
 		// sets up objects in view
 		setup();
-		//new instance
-		if (savedInstanceState == null) {
-			//sets up first view to display
-			setupInitialView();
-		} else { //destroyed and recreated
-			currentPage = savedInstanceState.getInt("currentPage");
-			displayNewView(currentPage);
-			if (savedInstanceState.getBundle(helpBundleKey) != null) {
-				//launch help dialog
-				buildHelpDialog(Globals.HelpTitle);
-			}
-		}
+		//sets up first view to display
+		setupInitialView(); 
 	}
 
 	/**
@@ -384,6 +374,21 @@ public class ComicViewer extends Activity implements OnClickListener {
 		super.onSaveInstanceState(outState);
 	}
 	
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onRestoreInstanceState(android.os.Bundle)
+	 */
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onRestoreInstanceState(savedInstanceState);
+		currentPage = savedInstanceState.getInt("currentPage");
+		displayNewView(currentPage);
+		if (savedInstanceState.getBundle(helpBundleKey) != null) {
+			//launch help dialog
+			buildHelpDialog(Globals.HelpTitle);
+		}
+	}
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onStop()
