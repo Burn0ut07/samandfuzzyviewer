@@ -48,7 +48,10 @@ public class Globals {
 
 	public static final String StartImageURL = "http://samandfuzzy.com/comics/";
 	public static final String EndImageURL = ".gif";
-
+	
+	public static final String newsCSSStart = "<body style=\"background:Black; color:White;\">";
+	public static final String newsCSSEnd = "</body>";
+	
 	public static final String ZeroRange = "1-98";
 	public static final String OneRange = "99-229";
 	public static final String TwoRange = "230-374";

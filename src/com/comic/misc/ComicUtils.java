@@ -14,9 +14,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import com.comic.globals.Globals;
-
 import android.graphics.drawable.Drawable;
+
+import com.comic.globals.Globals;
 
 public class ComicUtils {
 
@@ -31,15 +31,11 @@ public class ComicUtils {
 		HttpClient client = new DefaultHttpClient();
 		HttpGet request = new HttpGet(url);
 		HttpResponse response;
-		StringBuilder httpSource = new StringBuilder();
+		String httpSource = "";
 		try {
 			response = client.execute(request);
 			InputStream in = response.getEntity().getContent();
-			BufferedReader reader = new BufferedReader(
-					new InputStreamReader(in));
-			for (String i = reader.readLine(); reader.read() != -1; i = reader
-					.readLine())
-				httpSource.append(i);
+			httpSource = convertStreamToString(in);
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -47,7 +43,7 @@ public class ComicUtils {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return httpSource.toString();
+		return httpSource;
 	}
 
 	/**
@@ -84,15 +80,15 @@ public class ComicUtils {
 	}
 
 	/**
-	 * Gets the range for the latest volume
+	 * Returns a String of the range for the latest volume
 	 * 
-	 * @param volume
-	 *            the most recent volume
+	 * @param currVol
+	 *            TODO
 	 * 
 	 * @return String range of latest volume
 	 */
-	public static String lastVolumeRange(int volume) {
-		String volRange = Globals.VOL_RANGES[volume], src = ComicUtils
+	public static String lastVolumeRange(int currVol) {
+		String volRange = Globals.VOL_RANGES[currVol], src = ComicUtils
 				.getHTTPSource("http://samandfuzzy.com");
 		Matcher m = Pattern.compile(Globals.StartImageURL + "0+([0-9]+)")
 				.matcher(src);
@@ -113,6 +109,34 @@ public class ComicUtils {
 				.matcher(ComicUtils.getHTTPSource("http://samandfuzzy.com"));
 		m.find();
 		return Integer.valueOf(m.group(1));
+	}
+
+	/**
+	 * Converts an InputStream into a String
+	 * 
+	 * @param is The InputStream
+	 * @return A String representing the data from the InputStream
+	 * @throws IOException
+	 */
+	public static String convertStreamToString(InputStream is)
+			throws IOException {
+		if (is != null) {
+			StringBuilder sb = new StringBuilder();
+			String line;
+
+			try {
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(is, "UTF-8"));
+				while ((line = reader.readLine()) != null) {
+					sb.append(line).append("\n");
+				}
+			} finally {
+				is.close();
+			}
+			return sb.toString();
+		} else {
+			return "";
+		}
 	}
 
 }
