@@ -48,7 +48,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	private int firstVolPage, lastVolPage, currentPage, currentVol;
 	private WebView myWebView;
 	private TextView comicTitleView;
-	private View zoom, navbar, navReplace; 
+	private View navbar, navReplace; 
 	private AlertDialog helpDialog;
 	private final String helpBundleKey = "helpDialogBundle";
 	private static Pattern comicTitleRegex = 
@@ -117,8 +117,6 @@ public class ComicViewer extends Activity implements OnClickListener {
 		});
 		myWebView.requestFocus();
 		myWebView.setBackgroundColor(Color.BLACK);
-		zoom = myWebView.getZoomControls();
-		zoom.setVisibility(View.VISIBLE);
 		myWebView.getSettings().setBuiltInZoomControls(true);
 		
 		// get volume range
@@ -415,6 +413,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 		if (myWebView != null){
 			myWebView.clearCache(true);
 			myWebView.clearHistory();
+			myWebView.destroy();
 		}
 	}
 
