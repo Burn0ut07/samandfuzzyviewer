@@ -9,6 +9,4 @@
     <item android:id="@+id/store"
           android:icon="@drawable/store_icon"
           android:title="Store" />
-    <item android:id="@+id/newspost"
-    	  android:title="News Post" />
 </menu>

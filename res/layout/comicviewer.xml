@@ -28,7 +28,7 @@
 					android:layout_below="@+id/TableLayout01" android:layout_width="80px"
 					android:layout_marginTop="2dip" android:inputType="number"
 					android:singleLine="true" android:textSize="12dip"/>
-				<Button android:id="@+id/next" android:text="Next"
+				<Button android:id="@+id/news" android:text="News"
 					android:layout_height="fill_parent" android:layout_toRightOf="@+id/Button03"
 					android:layout_below="@+id/TableLayout01" android:layout_width="wrap_content"
 					android:layout_marginTop="2dip" />
@@ -46,7 +46,7 @@
 	<TextView android:id="@+id/comictitle" android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:textSize="13sp"
 		android:textColor="#FFFFFF" />
-	<WebView android:id="@+id/webView" android:layout_width="fill_parent"
+	<com.comic.viewer.ClickableWebView android:id="@+id/webView" android:layout_width="fill_parent"
 		android:layout_height="fill_parent" android:background="#000000" />
 	</LinearLayout>
 </TableLayout>

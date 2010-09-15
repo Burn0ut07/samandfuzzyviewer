@@ -13,6 +13,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -41,16 +42,16 @@ import com.comic.misc.NavBarListener;
 
 public class ComicViewer extends Activity implements OnClickListener {
 	public ProgressDialog loadingDialog;
-	private Button first, back, next, last;
+	private Button first, back, news, last;
 	private EditText goto_vol_page;
 	private int firstVolPage, lastVolPage, currentPage, currentVol;
-	private WebView myWebView;
+	private WebView comicview;
 	private TextView comicTitleView;
-	private View zoom, navbar, navReplace;
+	private View navbar, navReplace;
 	private AlertDialog helpDialog;
 	private final String helpBundleKey = "helpDialogBundle",
 			lastComicKey = "lastComic";
-	private String comicSrc;
+	private boolean viewingComic;
 	private static Pattern comicTitleRegex = Pattern
 			.compile("http://samandfuzzy.com/comics/.+?alt=\"(.+?)\"");
 	private static Pattern newspostRegex = Pattern
@@ -84,24 +85,24 @@ public class ComicViewer extends Activity implements OnClickListener {
 	 * controls
 	 */
 	public void setup() {
-		// gets instances from xml
-		myWebView = (WebView) findViewById(R.id.webView);
+		//gets instances from xml
+		comicview = (WebView) findViewById(R.id.webView);
 		first = (Button) findViewById(R.id.start);
 		first.setOnClickListener(this);
 		back = (Button) findViewById(R.id.back);
 		back.setOnClickListener(this);
 		goto_vol_page = (EditText) findViewById(R.id.goto_vol_page);
 		goto_vol_page.setOnEditorActionListener(new OnEditorActionListener() {
-			public boolean onEditorAction(TextView v, int actionId,
-					KeyEvent event) {
-				int num = Integer.valueOf(goto_vol_page.getText().toString());
-				if (num != currentPage)
-					displayNewView(num);
-				return false;
-			}
-		});
-		next = (Button) findViewById(R.id.next);
-		next.setOnClickListener(this);
+            public boolean onEditorAction(TextView v, int actionId,
+                    KeyEvent event) {
+            	int num = Integer.valueOf(goto_vol_page.getText().toString());
+            	if (num != currentPage)
+            		displayNewView(num);
+                return false;
+            }
+        });
+		news = (Button) findViewById(R.id.news);
+		news.setOnClickListener(this);
 		last = (Button) findViewById(R.id.current);
 		last.setOnClickListener(this);
 		comicTitleView = (TextView) findViewById(R.id.comictitle);
@@ -110,34 +111,35 @@ public class ComicViewer extends Activity implements OnClickListener {
 		navbar.setOnClickListener(this);
 		navReplace = findViewById(R.id.navreturn);
 		navReplace.setOnClickListener(this);
-
-		// sets up image display and zoom
-		myWebView.setClickable(true);
+		
+		//sets up image display and zoom
+		comicview.setClickable(true);
+		comicview.setOnClickListener(this);
 		final Activity activity = this;
 		final ComicViewer comicviewer = this;
-		myWebView.setWebChromeClient(new WebChromeClient() {
-			public void onProgressChanged(WebView view, int progress) {
-				// sets progress dialog
-				comicviewer.setLoading(progress);
-			}
-		});
-		myWebView.setWebViewClient(new WebViewClient() {
+		comicview.setWebChromeClient(new WebChromeClient() {
+			   public void onProgressChanged(WebView view, int progress) {
+				   		//sets progress dialog
+				   		comicviewer.setLoading(progress);
+				   }
+				 });
+		comicview.setWebViewClient(new WebViewClient() {
 			public void onReceivedError(WebView view, int errorCode,
 					String description, String failingUrl) {
 				Toast.makeText(activity, "Oh no! " + description,
 						Toast.LENGTH_SHORT).show();
 			}
 		});
-		myWebView.requestFocus();
-		zoom = myWebView.getZoomControls();
-		zoom.setVisibility(View.VISIBLE);
-		myWebView.getSettings().setBuiltInZoomControls(true);
-
+		comicview.requestFocus();
+		comicview.setBackgroundColor(Color.BLACK);
+		comicview.getSettings().setBuiltInZoomControls(true);
+		
 		// get volume range
 		Bundle bundle = getIntent().getExtras();
 		// sets up the range of this volume
 		setThisVolumeRange((String) bundle.getString("volumeRange"));
 		currentVol = (int) bundle.getInt("volumeNumber");
+		viewingComic = true;
 	}
 
 	/**
@@ -175,20 +177,28 @@ public class ComicViewer extends Activity implements OnClickListener {
 			return;
 		}
 		currentPage = pageToView;
+		String comicSrc = ComicUtils.getHTTPSource("http://samandfuzzy.com/" + currentPage);
 		goto_vol_page.setText(String.valueOf(currentPage));
 		adjustControls();
-		myWebView.clearView();
-		String imageURL = Globals.StartImageURL
+		comicview.clearView();
+		if(viewingComic) {
+			String imageURL = Globals.StartImageURL 
 				+ ComicUtils.zfill(currentPage, Globals.numZeros);
-		int in = Arrays.binarySearch(Globals.guest_img_ids, currentPage);
-		imageURL += in >= 0 ? Globals.guest_img_exts[in] : Globals.EndImageURL;
-		myWebView.loadUrl(imageURL);
-		comicSrc = ComicUtils.getHTTPSource("http://samandfuzzy.com/"
-				+ currentPage);
+			int in = Arrays.binarySearch(Globals.guest_img_ids, currentPage);
+			imageURL += in >= 0 ? Globals.guest_img_exts[in] : Globals.EndImageURL;
+			comicview.loadUrl(imageURL);
+		} else {
+			Matcher m = newspostRegex.matcher(comicSrc);
+			m.find();
+			String toLoad = Globals.newsCSSStart + m.group(1) + Globals.newsCSSEnd;
+			comicview.loadDataWithBaseURL("http://samandfuzzy.com", toLoad,
+					"text/html", "utf-8", null);
+		}
 		setComicTitle(comicSrc);
 		if (loadingDialog != null && loadingDialog.isShowing())
 			doneLoading();
 		fadeNavBar();
+		comicview.setInitialScale(70);
 	}
 
 	/**
@@ -210,7 +220,6 @@ public class ComicViewer extends Activity implements OnClickListener {
 	 */
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		fadeNavBar();
 	}
@@ -223,8 +232,10 @@ public class ComicViewer extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		if (v == next) {
-			setupNextView();
+		if (v == news) {
+			viewingComic = !viewingComic;
+			news.setText(viewingComic ? "News" : "Comic");
+			displayNewView(currentPage);
 		} else if (v == back) {
 			setupPrevView();
 		} else if (v == first) {
@@ -238,6 +249,8 @@ public class ComicViewer extends Activity implements OnClickListener {
 			navbar.setVisibility(View.VISIBLE);
 		} else if (v == navbar) {
 			fadeNavBar();
+		} else if (v == comicview) {
+			setupNextView();
 		}
 	}
 
@@ -280,8 +293,6 @@ public class ComicViewer extends Activity implements OnClickListener {
 			first.setFocusable(true);
 			back.setEnabled(true);
 			back.setFocusable(true);
-			next.setEnabled(true);
-			next.setFocusable(true);
 			last.setEnabled(true);
 			last.setFocusable(true);
 		} else if (currentPage == firstVolPage) {
@@ -289,8 +300,6 @@ public class ComicViewer extends Activity implements OnClickListener {
 			first.setFocusable(false);
 			back.setEnabled(false);
 			back.setFocusable(false);
-			next.setEnabled(true);
-			next.setFocusable(true);
 			last.setEnabled(true);
 			last.setFocusable(true);
 		} else if (currentPage == lastVolPage) {
@@ -298,8 +307,6 @@ public class ComicViewer extends Activity implements OnClickListener {
 			first.setFocusable(true);
 			back.setEnabled(true);
 			back.setFocusable(true);
-			next.setEnabled(false);
-			next.setFocusable(false);
 			last.setEnabled(false);
 			last.setFocusable(false);
 		} else {
@@ -307,11 +314,10 @@ public class ComicViewer extends Activity implements OnClickListener {
 			first.setFocusable(false);
 			back.setEnabled(false);
 			back.setFocusable(false);
-			next.setEnabled(false);
-			next.setFocusable(false);
 			last.setEnabled(false);
 			last.setFocusable(false);
 		}
+		news.setText(viewingComic ? "News" : "Comic");
 	}
 
 	/**
@@ -352,12 +358,6 @@ public class ComicViewer extends Activity implements OnClickListener {
 			startActivity(new Intent(Intent.ACTION_VIEW,
 					Uri.parse(Globals.storeURL)));
 			return true;
-		case R.id.newspost:
-			Matcher m = newspostRegex.matcher(comicSrc);
-			m.find();
-			myWebView.loadDataWithBaseURL("http://samandfuzzy.com", m.group(1),
-					"text/html", "utf-8", null);
-			return true;
 		}
 		return false;
 	}
@@ -389,6 +389,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putInt("currentPage", currentPage);
+		outState.putBoolean("viewingComic", viewingComic);
 		if (helpDialog != null && helpDialog.isShowing()) {
 			// save help dialog if screen orientation changed
 			outState.putBundle(helpBundleKey, helpDialog.onSaveInstanceState());
@@ -396,23 +397,29 @@ public class ComicViewer extends Activity implements OnClickListener {
 		super.onSaveInstanceState(outState);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onStop()
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onRestoreInstanceState(android.os.Bundle)
 	 */
 	@Override
-	protected void onStop() {
-		super.onStop();
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		currentPage = savedInstanceState.getInt("currentPage");
+		viewingComic = savedInstanceState.getBoolean("viewingComic");
+		displayNewView(currentPage);
+		if (savedInstanceState.getBundle(helpBundleKey) != null) {
+			//launch help dialog
+			buildHelpDialog(Globals.HelpTitle);
+		}
+	}
 
-		// We need an Editor object to make preference changes.
-		// All objects are from android.context.Context
-		SharedPreferences settings = getSharedPreferences("VOLUME_SAVES", 0);
-		SharedPreferences.Editor editor = settings.edit();
-		editor.putInt(lastComicKey + currentVol, currentPage);
-
-		// Commit the edits!
-		editor.commit();
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if (comicview != null){
+			comicview.clearCache(true);
+			comicview.clearHistory();
+			comicview.destroy();
+		}
 	}
 
 	/**
