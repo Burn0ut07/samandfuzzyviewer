@@ -240,7 +240,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 		} else if (v == navbar) {
 			fadeNavBar();
 		} else if (v == comicview) {
-			setupNextView();
+			displayNewView(currentPage + 1); 
 		}
 	}
 
