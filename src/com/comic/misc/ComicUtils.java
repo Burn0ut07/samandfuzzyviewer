@@ -161,6 +161,11 @@ public class ComicUtils {
 		return cm.getActiveNetworkInfo().isConnected();
 	}
 	
+	/**
+	 * Displays alert dialog to notify user of lack of connectivity
+	 * @param context
+	 * 			the context in which to display the notification
+	 */
 	public static void displayNoConnectivityDialog(final Context context){
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setMessage("There seems to be no Internet connectivity. " +
