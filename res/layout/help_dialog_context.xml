@@ -81,14 +81,14 @@ is displayed as a hint when the text field is empty."
               />
     <TextView android:layout_width="fill_parent"
               android:layout_height="wrap_content"
-              android:text="The Next button"
+              android:text="The News/Comic button"
               android:textSize="15sp"
               android:textStyle="bold"
               android:layout_marginBottom="3dip"
               />
 	<TextView android:layout_width="fill_parent"
               android:layout_height="wrap_content"
-              android:text="Displays the next immediate comic strip."
+              android:text="Toggles between the comic or the news post for the specific page"
               android:textSize="13sp"
               android:layout_marginBottom="3dip"
               />

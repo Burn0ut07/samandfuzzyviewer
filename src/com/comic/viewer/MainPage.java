@@ -82,6 +82,10 @@ public class MainPage extends ListActivity implements android.view.View.OnClickL
 	@Override
 	public void onClick(View v) {
 		if (v == currentComic){ //launch most recent comic
+			if (!ComicUtils.isOnline(this)){
+				ComicUtils.displayNoConnectivityDialog(this);
+				return;
+			}
 			SharedPreferences settings = getSharedPreferences("VOLUME_SAVES", 0);
 			if (settings != null){
 		    	SharedPreferences.Editor editor = settings.edit();
@@ -113,6 +117,10 @@ public class MainPage extends ListActivity implements android.view.View.OnClickL
 	 * @param volumeIndex The index of the user selection
 	 */
 	public void launchVolume(int volumeIndex) {
+		if (!ComicUtils.isOnline(this)){
+			ComicUtils.displayNoConnectivityDialog(this);
+			return;
+		}
 		Toast.makeText(this, "Beginning Volume - "+ (Globals.MAX_VOLUMES - volumeIndex), 1000).show();
 		Intent i = new Intent(this, ComicViewer.class);
 		switch (volumeIndex) {

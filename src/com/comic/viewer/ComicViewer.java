@@ -14,6 +14,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
@@ -51,7 +52,8 @@ public class ComicViewer extends Activity implements OnClickListener {
 	private View navbar, navReplace;
 	private AlertDialog helpDialog;
 	private final String helpBundleKey = "helpDialogBundle",
-			lastComicKey = "lastComic";
+			lastComicKey = "lastComic",
+			loadingDialogKey = "loadingDialogBundle";
 	private boolean viewingComic;
 	private static Pattern comicTitleRegex = Pattern
 			.compile("http://samandfuzzy.com/comics/.+?alt=\"(.+?)\"");
@@ -65,10 +67,16 @@ public class ComicViewer extends Activity implements OnClickListener {
 		// sets up custom title bar
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.comicviewer);
-		// sets up objects in view
-		setup();
-		//sets up first view to display
-		setupInitialView(); 
+		
+		if (!ComicUtils.isOnline(this)){ //no internet connectivity
+			ComicUtils.displayNoConnectivityDialog(this);
+		}
+		else {
+			// sets up objects in view
+			setup();
+			//sets up first view to display
+			setupInitialView(); 
+		}
 	}
 
 	/**
@@ -79,8 +87,10 @@ public class ComicViewer extends Activity implements OnClickListener {
 		//gets instances from xml
 		comicview = (WebView) findViewById(R.id.webView);
 		first = (Button) findViewById(R.id.start);
+		first.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/handvetica.ttf"));
 		first.setOnClickListener(this);
 		back = (Button) findViewById(R.id.back);
+		back.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/handvetica.ttf"));
 		back.setOnClickListener(this);
 		goto_vol_page = (EditText) findViewById(R.id.goto_vol_page);
 		goto_vol_page.setOnEditorActionListener(new OnEditorActionListener() {
@@ -93,14 +103,18 @@ public class ComicViewer extends Activity implements OnClickListener {
             }
         });
 		news = (Button) findViewById(R.id.news);
+		news.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/handvetica.ttf"));
 		news.setOnClickListener(this);
 		last = (Button) findViewById(R.id.current);
+		last.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/handvetica.ttf"));
 		last.setOnClickListener(this);
 		comicTitleView = (TextView) findViewById(R.id.comictitle);
+		comicTitleView.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/handvetica.ttf"));
 		comicTitleView.setOnClickListener(this);
 		navbar = findViewById(R.id.navbar);
 		navbar.setOnClickListener(this);
 		navReplace = findViewById(R.id.navreturn);
+		((TextView) navReplace).setTypeface(Typeface.createFromAsset(getAssets(), "fonts/handvetica.ttf"));
 		navReplace.setOnClickListener(this);
 		
 		//sets up image display and zoom
@@ -162,6 +176,10 @@ public class ComicViewer extends Activity implements OnClickListener {
 	 * Displays a new comic image to the view
 	 */
 	private void displayNewView(int pageToView) {
+		if (!ComicUtils.isOnline(this)){ //no internet connectivity
+			ComicUtils.displayNoConnectivityDialog(this);
+			return;
+		}
 		if (pageToView < firstVolPage || pageToView > lastVolPage) {
 			displayError("Please enter a valid page number");
 			goto_vol_page.setText("");
@@ -242,13 +260,6 @@ public class ComicViewer extends Activity implements OnClickListener {
 		} else if (v == comicview) {
 			displayNewView(currentPage + 1); 
 		}
-	}
-
-	/**
-	 * Setups for displaying of next immediate view
-	 */
-	private void setupNextView() {
-		displayNewView(++currentPage);
 	}
 
 	/**
@@ -383,6 +394,9 @@ public class ComicViewer extends Activity implements OnClickListener {
 		if (helpDialog != null && helpDialog.isShowing()) {
 			// save help dialog if screen orientation changed
 			outState.putBundle(helpBundleKey, helpDialog.onSaveInstanceState());
+		}
+		if (loadingDialog != null && loadingDialog.isShowing()){
+			outState.putBundle(loadingDialogKey, loadingDialog.onSaveInstanceState());
 		}
 		super.onSaveInstanceState(outState);
 	}
