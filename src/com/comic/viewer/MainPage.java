@@ -5,6 +5,7 @@ package com.comic.viewer;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +14,8 @@ import android.content.DialogInterface.OnClickListener;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,6 +49,17 @@ public class MainPage extends ListActivity implements android.view.View.OnClickL
 	private AlertDialog copyrightDialog, helpDialog;
 	private Button currentComic;
 	private TextView header;
+	private int volumeIndexToLaunch = -1;
+	// Need handler for callbacks to the UI thread
+	private final Handler mHandler = new Handler();
+	// Create runnable for posting
+	private final Runnable mUpdateResults = new Runnable() {
+		public void run() {
+			doneLoading();
+			launchVolume(volumeIndexToLaunch);
+		}
+	};
+	private ProgressDialog loadingDialog;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -57,14 +71,6 @@ public class MainPage extends ListActivity implements android.view.View.OnClickL
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
 				R.layout.mainmenutitlebar);
 		
-		currentComic = (Button) findViewById(R.id.current_comic);
-		currentComic.setOnClickListener(this);
-		currentComic.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/handvetica.ttf"));
-		header = (TextView) findViewById(R.id.header);
-		header.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/handvetica.ttf"));
-		
-		//set the main menu list
-		setListAdapter(new ListVolumesAdapter(this));
 		//handle for screen orientation change
 		if (savedInstanceState != null) {
 			if (savedInstanceState.getBundle(copyrightBundleKey) != null) {
@@ -77,6 +83,15 @@ public class MainPage extends ListActivity implements android.view.View.OnClickL
 		}
 		else
 			launchLastComic();
+		
+		currentComic = (Button) findViewById(R.id.current_comic);
+		currentComic.setOnClickListener(this);
+		currentComic.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/handvetica.ttf"));
+		header = (TextView) findViewById(R.id.header);
+		header.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/handvetica.ttf"));
+		
+		//set the main menu list
+		setListAdapter(new ListVolumesAdapter(this));
 	}
 	
 	@Override
@@ -103,12 +118,21 @@ public class MainPage extends ListActivity implements android.view.View.OnClickL
 	 * Launches last comic viewed
 	 */
 	private void launchLastComic() {
-		SharedPreferences prefs = getSharedPreferences("VOLUME_SAVES", 0);
-		int i = -1, lastViewed = -1;
-		for(i = Globals.MAX_VOLUMES; i >= 0 && lastViewed == -1; i--)
-			lastViewed = prefs.getInt("lastComic" + i, -1);
-		if(i >= 0)
-			launchVolume(Globals.MAX_VOLUMES - (i + 1));
+		showLoading();
+		Thread t = new Thread() {
+			@Override
+			public void run() {
+				SharedPreferences prefs = getSharedPreferences("VOLUME_SAVES", 0);
+				int i = -1, lastViewed = -1;
+				for(i = Globals.MAX_VOLUMES; i >= 0 && lastViewed == -1; i--)
+					lastViewed = prefs.getInt("lastComic" + i, -1);
+				if(i >= 0){
+					volumeIndexToLaunch = Globals.MAX_VOLUMES - (i + 1);
+					mHandler.post(mUpdateResults);
+				}
+			}
+		};
+		t.start();
 	}
 	
 	/**
@@ -259,6 +283,22 @@ public class MainPage extends ListActivity implements android.view.View.OnClickL
 			outState.putBundle(helpBundleKey, helpDialog.onSaveInstanceState());
 		}
 		super.onSaveInstanceState(outState);
+	}
+	
+	/**
+	 * called to display a loading dialog
+	 */
+	public void showLoading() {
+		loadingDialog = ProgressDialog
+				.show(this, "", "Checking for previously viewed comic. Please wait...");
+	}
+
+	/**
+	 * called to dismiss a loading dialog
+	 */
+	public void doneLoading() {
+		if (loadingDialog != null)
+			loadingDialog.dismiss();
 	}
 
 	@Override

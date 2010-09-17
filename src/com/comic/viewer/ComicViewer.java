@@ -436,12 +436,12 @@ public class ComicViewer extends Activity implements OnClickListener {
 
 	@Override
 	protected void onDestroy() {
-		super.onDestroy();
-		if (comicview != null){
+		if (comicview != null && isFinishing()){
 			comicview.clearCache(true);
 			comicview.clearHistory();
 			comicview.destroy();
 		}
+		super.onDestroy();
 	}
 
 	/**
