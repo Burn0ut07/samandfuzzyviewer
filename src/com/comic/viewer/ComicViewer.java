@@ -451,7 +451,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 		if (loadingDialog == null) {
 			loadingDialog = new ProgressDialog(this);
 			loadingDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-			loadingDialog.setMessage("Loading...Please wait");
+			loadingDialog.setMessage("Loading. Please wait...");
 			loadingDialog.setCancelable(false);
 		}
 		if (!loadingDialog.isShowing())
