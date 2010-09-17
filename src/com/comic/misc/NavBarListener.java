@@ -1,5 +1,7 @@
 package com.comic.misc;
 
+import com.comic.viewer.ComicViewer;
+
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -10,11 +12,13 @@ public class NavBarListener implements AnimationListener {
 	
 	private RelativeLayout navbar;
 	private TextView navReplace;
+	private ComicViewer cv;
 	
-	public NavBarListener(View navbar, View navReplace) {
+	public NavBarListener(View navbar, View navReplace, ComicViewer cv) {
 		super();
 		this.navbar = (RelativeLayout)navbar;
 		this.navReplace = (TextView)navReplace;
+		this.cv = cv;
 	}
 
 	/* (non-Javadoc)
@@ -24,6 +28,7 @@ public class NavBarListener implements AnimationListener {
 	public void onAnimationEnd(Animation animation) {
 		navbar.setVisibility(View.GONE);
 		navReplace.setVisibility(View.VISIBLE);
+		cv.setNavbarVisible(false);
 	}
 
 	/* (non-Javadoc)

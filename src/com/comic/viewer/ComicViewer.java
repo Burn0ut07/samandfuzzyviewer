@@ -26,7 +26,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.WebChromeClient;
@@ -54,7 +53,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	private final String helpBundleKey = "helpDialogBundle",
 			lastComicKey = "lastComic",
 			loadingDialogKey = "loadingDialogBundle";
-	private boolean viewingComic;
+	private boolean viewingComic, navbarVisible;
 	private static Pattern comicTitleRegex = Pattern
 			.compile("http://samandfuzzy.com/comics/.+?alt=\"(.+?)\"");
 	private static Pattern newspostRegex = Pattern
@@ -66,9 +65,8 @@ public class ComicViewer extends Activity implements OnClickListener {
 
 		setContentView(R.layout.comicviewer);
 		
-		if (!ComicUtils.isOnline(this)){ //no internet connectivity
+		if (!ComicUtils.isOnline(this))  //no internet connectivity
 			ComicUtils.displayNoConnectivityDialog(this);
-		}
 		else {
 			// sets up objects in view
 			setup();
@@ -142,7 +140,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 		// sets up the range of this volume
 		setThisVolumeRange((String) bundle.getString("volumeRange"));
 		currentVol = (int) bundle.getInt("volumeNumber");
-		viewingComic = true;
+		viewingComic = navbarVisible = true;
 	}
 
 	/**
@@ -164,9 +162,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	 */
 	private void setupInitialView() {
 		SharedPreferences settings = getSharedPreferences("VOLUME_SAVES", 0);
-		if (settings != null)
-			currentPage = settings.getInt(lastComicKey + currentVol,
-					firstVolPage);
+		currentPage = settings.getInt(lastComicKey + currentVol, firstVolPage);
 		displayNewView(currentPage);
 	}
 
@@ -174,7 +170,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 	 * Displays a new comic image to the view
 	 */
 	private void displayNewView(int pageToView) {
-		if (!ComicUtils.isOnline(this)){ //no internet connectivity
+		if (!ComicUtils.isOnline(this)) { //no internet connectivity
 			ComicUtils.displayNoConnectivityDialog(this);
 			return;
 		}
@@ -199,7 +195,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 			m.find();
 			String toLoad = Globals.newsCSSStart + m.group(1) + Globals.newsCSSEnd;
 			comicview.loadDataWithBaseURL("http://samandfuzzy.com", toLoad,
-					"text/html", "utf-8", null);
+					"text/html", "utf-8", null);//TODO: Needs different encoding (iso-latin-1?)
 		}
 		setComicTitle(comicSrc);
 		if (loadingDialog != null && loadingDialog.isShowing())
@@ -232,7 +228,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 
 	private void fadeNavBar() {
 		Animation fadeout = AnimationUtils.loadAnimation(this, R.anim.fade_out);
-		fadeout.setAnimationListener(new NavBarListener(navbar, navReplace));
+		fadeout.setAnimationListener(new NavBarListener(navbar, navReplace, this));
 		navbar.startAnimation(fadeout);
 	}
 
@@ -240,7 +236,6 @@ public class ComicViewer extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		if (v == news) {
 			viewingComic = !viewingComic;
-			news.setText(viewingComic ? "News" : "Comic");
 			displayNewView(currentPage);
 		} else if (v == back) {
 			setupPrevView();
@@ -251,8 +246,12 @@ public class ComicViewer extends Activity implements OnClickListener {
 		} else if (v == goto_vol_page) {
 			finish();
 		} else if (v == comicTitleView || v == navReplace) {
-			navReplace.setVisibility(View.GONE);
-			navbar.setVisibility(View.VISIBLE);
+			if(!navbarVisible) {
+				navReplace.setVisibility(View.GONE);
+				navbar.setVisibility(View.VISIBLE);
+			}
+			else 
+				fadeNavBar();
 		} else if (v == navbar) {
 			fadeNavBar();
 		} else if (v == comicview) {
@@ -408,7 +407,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 		super.onRestoreInstanceState(savedInstanceState);
 		currentPage = savedInstanceState.getInt("currentPage");
 		viewingComic = savedInstanceState.getBoolean("viewingComic");
-		displayNewView(currentPage);
+		displayNewView(currentPage);//TODO: useless call?
 		if (savedInstanceState.getBundle(helpBundleKey) != null) {
 			//launch help dialog
 			buildHelpDialog(Globals.HelpTitle);
@@ -466,6 +465,11 @@ public class ComicViewer extends Activity implements OnClickListener {
 	 */
 	public void doneLoading() {
 		loadingDialog.dismiss();
+	}
+	
+	public boolean setNavbarVisible(boolean visible) {
+		navbarVisible = visible;
+		return navbarVisible;
 	}
 
 	public void displayError(String message) {
