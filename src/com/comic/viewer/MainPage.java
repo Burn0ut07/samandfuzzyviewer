@@ -49,13 +49,15 @@ public class MainPage extends ListActivity implements android.view.View.OnClickL
 	private Button currentComic;
 	private TextView header;
 	private int volumeIndexToLaunch = -1;
+	private boolean foundLastComic;
 	// Need handler for callbacks to the UI thread
 	private final Handler mHandler = new Handler();
 	// Create runnable for posting
 	private final Runnable mUpdateResults = new Runnable() {
 		public void run() {
 			doneLoading();
-			launchVolume(volumeIndexToLaunch);
+			if(foundLastComic)
+				launchVolume(volumeIndexToLaunch);
 		}
 	};
 	private ProgressDialog loadingDialog;
@@ -69,6 +71,7 @@ public class MainPage extends ListActivity implements android.view.View.OnClickL
 		setContentView(R.layout.main);
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
 				R.layout.mainmenutitlebar);
+		foundLastComic = false;
 		
 		//handle for screen orientation change
 		if (savedInstanceState != null) {
@@ -125,10 +128,11 @@ public class MainPage extends ListActivity implements android.view.View.OnClickL
 				int i = -1, lastViewed = -1;
 				for(i = Globals.MAX_VOLUMES; i >= 0 && lastViewed == -1; i--)
 					lastViewed = prefs.getInt("lastComic" + i, -1);
-				if(i >= 0){
+				if(i >= 0) {
+					foundLastComic = true;
 					volumeIndexToLaunch = Globals.MAX_VOLUMES - (i + 1);
-					mHandler.post(mUpdateResults);
 				}
+				mHandler.post(mUpdateResults);
 			}
 		};
 		t.start();
