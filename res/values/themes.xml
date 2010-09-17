@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<style name="titlebarTheme" parent="android:Theme">
-		<item name="android:windowTitleSize">45dip</item>
-		<item name="android:windowTitleBackgroundStyle">@style/WindowTitleBackground1</item>
-	</style>
-	<style name="mainMenuTheme" parent="android:Theme">
+<style name="mainMenuTheme" parent="android:Theme">
 		<item name="android:windowTitleSize">24dip</item>
-		<item name="android:windowTitleBackgroundStyle">@style/WindowTitleBackground2</item>
+		<item name="android:windowTitleBackgroundStyle">@style/WindowTitleBackground</item>
 	</style>
 </resources>

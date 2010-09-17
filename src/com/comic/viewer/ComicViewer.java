@@ -64,8 +64,6 @@ public class ComicViewer extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// sets up custom title bar
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.comicviewer);
 		
 		if (!ComicUtils.isOnline(this)){ //no internet connectivity

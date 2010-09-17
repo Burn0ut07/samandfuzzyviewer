@@ -13,7 +13,7 @@
             </intent-filter>
         </activity>
 		<activity android:name="ComicViewer"
-		android:theme="@style/titlebarTheme"/>
+		android:theme="@android:style/Theme.NoTitleBar"/>
     </application>
 
 <uses-permission android:name="android.permission.INTERNET" /> 
