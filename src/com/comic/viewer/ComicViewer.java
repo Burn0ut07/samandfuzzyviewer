@@ -249,6 +249,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 			if(!navbarVisible) {
 				navReplace.setVisibility(View.GONE);
 				navbar.setVisibility(View.VISIBLE);
+				navbarVisible = true;
 			}
 			else 
 				fadeNavBar();
