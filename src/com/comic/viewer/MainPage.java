@@ -144,11 +144,7 @@ public class MainPage extends ListActivity implements android.view.View.OnClickL
 	 * @param volumeIndex The index of the user selection
 	 */
 	public void launchVolume(int volumeIndex) {
-		if (!ComicUtils.isOnline(this)){
-			ComicUtils.displayNoConnectivityDialog(this);
-			return;
-		}
-		Toast.makeText(this, "Beginning Volume - "+ (Globals.MAX_VOLUMES - volumeIndex), 1000).show();
+		Toast.makeText(this, "Beginning Volume - "+ (Globals.MAX_VOLUMES - volumeIndex), 2000).show();
 		Intent i = new Intent(this, ComicViewer.class);
 		switch (volumeIndex) {
 			case 6: //volume zero
@@ -176,6 +172,10 @@ public class MainPage extends ListActivity implements android.view.View.OnClickL
 				i.putExtra("volumeNumber", (Globals.MAX_VOLUMES - volumeIndex));
 				break;
 			case 0: //volume six
+				if (!ComicUtils.isOnline(this)){
+					ComicUtils.displayNoConnectivityDialog(this);
+					return;
+				}
 				i.putExtra("volumeRange", ComicUtils.lastVolumeRange(6));
 				i.putExtra("volumeNumber", (Globals.MAX_VOLUMES - volumeIndex));
 				break;
