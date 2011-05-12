@@ -1,0 +1,24 @@
+Place the entire dir "CSE131TestFramework2" inside your compiler folder. (ie: if your project is in Workspace/compilerProject, place is in Workspace/compilerProject/)
+
+Name your current RC.sh to RC.sh.backup with mv RC.sh RC.sh.backup
+
+move the RC.sh file inside of CSE131TestFramewprk into your project (following ie above: cp CSE131TestFrameWork/RC.sh .)
+
+note: make sure your RC.sh is in the top level directory and not in some subdirectory like bin/ or src/
+
+Place your own test files into CSE131TestFramework/PhaseX
+Run with ./CSE131TestFramework/testAll.sh [phaseX]
+Compare the diff's
+
+test.rc -> test file being tested
+
+test.ans.out -> answer file being diffed against
+
+test.my.out -> there are 3 different my.out's that can be created depending on if there was an error during certain phases of running the test -> failure in generating asm file, failure in linking, or failure in correct output
+
+To add to test's, create your own test file, run ./testAll.sh and email yixinzhu91@gmail.com with a zip of your test.rc and your test.ans.out
+-> when you create a new test.rc, the output of your file will become the ans.out so send both to me so I can diff with mine and we can resolve any problems before posting to everyone
+
+To run current tests, just download/clone the tests, run ./testAll.sh and check the diffs. Email me if the answers are wrong and you think your compiler is outputting the correct output so we can resolve the problem and upload the correct answers for everyone else.
+
+DISCLAIMER: the "answer" file MAY be wrong, so if there is an error make sure to check the ans.out, your my.out and the test.rc to make sure it really is wrong.
