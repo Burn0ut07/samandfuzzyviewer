@@ -45,6 +45,8 @@ public class Globals {
 			+ "afloat, as we begin to learn more about Fuzzy's mysterious past. "
 			+ "This is the most recent volume and is currently still in progress, "
 			+ "updating every Monday, Wednesday, and Friday.";
+	public static final String VolSevenName = "Volume 7: Sam and Fuzzy Under the Influence";
+	public static final String VolSevenInfo = "As Sam continues running NMS, Fuzzy grows father apart and continues to search out about his long forgotten past.";
 
 	public static final String StartImageURL = "http://samandfuzzy.com/comics/";
 	public static final String EndImageURL = ".gif";
@@ -57,14 +59,15 @@ public class Globals {
 	public static final String TwoRange = "230-374";
 	public static final String ThreeRange = "375-565";
 	public static final String FourRange = "566-1045";
-	public static final String FiveRange = "1046-1236";
-	public static final String SixRange = "1237";
+	public static final String FiveRange = "1046-1230";
+	public static final String SixRange = "1231-1418";
+	public static final String SevenRange = "1419";
 
 	public static final String EndorseVolFive = "The start of a brand new epic, this volume is the "
 			+ "perfect starting place for new readers!";
 
 	public static final String[] VOL_RANGES = { ZeroRange, OneRange, TwoRange,
-			ThreeRange, FourRange, FiveRange, SixRange };
+			ThreeRange, FourRange, FiveRange, SixRange, SevenRange };
 
 	public static final String CopyrightTitle = "Copyright";
 	public static final String CopyrightMessage = "All the comics featured in this app are retrieved from Sam Logan's website www.samandfuzzy.com. "
@@ -75,20 +78,21 @@ public class Globals {
 
 	public static final String lastComicKey = "lastComic";
 	public static final int numZeros = 8;
-	public static final int MAX_VOLUMES = 6;
+	public static final int MAX_VOLUMES = 7;
 	public static final String storeURL = "http://www.topatoco.com/samandfuzzy";
 
 	/** Ids for guest comics which have a different image extension than gif */
 	public static final int[] guest_img_ids = { 198, 202, 206, 366, 367, 371,
 			374, 481, 550, 552, 553, 554, 557, 710, 715, 718, 894, 897, 898,
-			899, 900, 1202, 1203, 1205, 1207, 1208, 1209, 1211 };
+			899, 900, 1202, 1203, 1205, 1207, 1208, 1209, 1211, 1419, 1423,
+			1424, 1426, 1427, 1428};
 
 	/** Image extensions for comics that aren't gif */
 	public static final String[] guest_img_exts = { ".jpg", ".jpg", ".jpg",
 			".jpg", ".jpg", ".jpg", ".jpg", ".jpg", ".png", ".png", ".jpg",
 			".jpg", ".png", ".jpg", ".png", ".png", ".png", ".jpg", ".jpg",
 			".jpg", ".jpg", ".jpg", ".png", ".png", ".jpg", ".jpg", ".jpg",
-			".jpg" };
+			".jpg", ".jpg", ".jpg", ".png", ".png", ".jpg", ".png"};
 
 	public static final int HELP_ID = Menu.FIRST;
 	public static final int COPYRIGHT_ID = Menu.FIRST + 1;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, ComicViewer!</string>
     <string name="app_name">Sam and Fuzzy Viewer</string>
+    <string name="VolZeroInfo">The first Sam and Fuzzy strips are a little rough around the edges, but are not without their hardcore advocates. This is not the best place for new readers to start, but if you have enjoyed the rest of the archive, dive in here to see the comic\'s awkward-yet-lovable adolescence.</string>
 </resources>

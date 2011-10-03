@@ -36,12 +36,12 @@ import com.comic.misc.ComicUtils;
 
 public class MainPage extends ListActivity implements android.view.View.OnClickListener {
 	//list of volume names
-	private String[] volumeNames = {Globals.VolSixName, Globals.VolFiveName, 
-			Globals.VolFourName, Globals.VolThreeName, 
+	private String[] volumeNames = {Globals.VolSevenName, Globals.VolSixName, 
+			Globals.VolFiveName, Globals.VolFourName, Globals.VolThreeName, 
 			Globals.VolTwoName, Globals.VolOneName, Globals.VolZeroName};
 	//list of volume info
-	private String[] volumeInfo = {Globals.VolSixInfo, Globals.VolFiveInfo, 
-			Globals.VolFourInfo, Globals.VolThreeInfo, 
+	private String[] volumeInfo = {Globals.VolSevenInfo, Globals.VolSixInfo, 
+			Globals.VolFiveInfo, Globals.VolFourInfo, Globals.VolThreeInfo, 
 			Globals.VolTwoInfo, Globals.VolOneInfo, Globals.VolZeroInfo};
 	private final String copyrightBundleKey = "copyrightDialogBundle";
 	private final String helpBundleKey = "helpDialogBundle";
@@ -147,36 +147,40 @@ public class MainPage extends ListActivity implements android.view.View.OnClickL
 		Toast.makeText(this, "Beginning Volume - "+ (Globals.MAX_VOLUMES - volumeIndex), 2000).show();
 		Intent i = new Intent(this, ComicViewer.class);
 		switch (volumeIndex) {
-			case 6: //volume zero
+			case 7: //volume zero
 				i.putExtra("volumeRange", Globals.ZeroRange);
 				i.putExtra("volumeNumber", (Globals.MAX_VOLUMES - volumeIndex));
 				break;
-			case 5: //volume one
+			case 6: //volume one
 				i.putExtra("volumeRange", Globals.OneRange);
 				i.putExtra("volumeNumber", (Globals.MAX_VOLUMES - volumeIndex));
 				break;
-			case 4: //volume two
+			case 5: //volume two
 				i.putExtra("volumeRange", Globals.TwoRange);
 				i.putExtra("volumeNumber", (Globals.MAX_VOLUMES - volumeIndex));
 				break;
-			case 3: //volume three
+			case 4: //volume three
 				i.putExtra("volumeRange", Globals.ThreeRange);
 				i.putExtra("volumeNumber", (Globals.MAX_VOLUMES - volumeIndex));
 				break;
-			case 2: //volume four
+			case 3: //volume four
 				i.putExtra("volumeRange", Globals.FourRange);
 				i.putExtra("volumeNumber", (Globals.MAX_VOLUMES - volumeIndex));
 				break;
-			case 1: //volume five
+			case 2: //volume five
 				i.putExtra("volumeRange", Globals.FiveRange);
 				i.putExtra("volumeNumber", (Globals.MAX_VOLUMES - volumeIndex));
 				break;
-			case 0: //volume six
+			case 1: //volume six
+				i.putExtra("volumeRange", Globals.SixRange);
+				i.putExtra("volumeNumber", (Globals.MAX_VOLUMES - volumeIndex));
+				break;
+			case 0:
 				if (!ComicUtils.isOnline(this)){
 					ComicUtils.displayNoConnectivityDialog(this);
 					return;
 				}
-				i.putExtra("volumeRange", ComicUtils.lastVolumeRange(6));
+				i.putExtra("volumeRange", ComicUtils.lastVolumeRange(7));
 				i.putExtra("volumeNumber", (Globals.MAX_VOLUMES - volumeIndex));
 				break;
 		}
@@ -345,29 +349,30 @@ public class MainPage extends ListActivity implements android.view.View.OnClickL
 			}
 			holder.volumeName.setText(volumeNames[position]);
 			holder.volumeDescription.setText(volumeInfo[position]);
-			switch(position){
-			case 0:
+			switch(position) {
+			case 1:
 				holder.volumeIcon.setImageResource(R.drawable.vol6);
 				break;
-			case 1:
+			case 2:
 				holder.volumeIcon.setImageResource(R.drawable.vol5);
 				break;
-			case 2:
+			case 3:
 				holder.volumeIcon.setImageResource(R.drawable.vol4);
 				break;
-			case 3:
+			case 4:
 				holder.volumeIcon.setImageResource(R.drawable.vol3);
 				break;
-			case 4:
+			case 5:
 				holder.volumeIcon.setImageResource(R.drawable.vol2);
 				break;
-			case 5:
+			case 6:
 				holder.volumeIcon.setImageResource(R.drawable.vol1);
 				break;
-			case 6:
+			case 7:
 				holder.volumeIcon.setImageResource(R.drawable.vol0);
 				break;
-			
+			default:
+				break;
 			}
 			if (position == 1) { //volume 5
 				holder.volumeDescriptionBold.setVisibility(View.VISIBLE);

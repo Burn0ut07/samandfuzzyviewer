@@ -195,7 +195,7 @@ public class ComicViewer extends Activity implements OnClickListener {
 			m.find();
 			String toLoad = Globals.newsCSSStart + m.group(1) + Globals.newsCSSEnd;
 			comicview.loadDataWithBaseURL("http://samandfuzzy.com", toLoad,
-					"text/html", "utf-8", null);//TODO: Needs different encoding (iso-latin-1?)
+					"text/html", "utf-8", null);
 		}
 		setComicTitle(comicSrc);
 		if (loadingDialog != null && loadingDialog.isShowing())

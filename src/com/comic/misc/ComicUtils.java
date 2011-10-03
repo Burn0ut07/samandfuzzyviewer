@@ -87,7 +87,7 @@ public class ComicUtils {
 	 * Returns a String of the range for the latest volume
 	 * 
 	 * @param currVol
-	 *            TODO
+	 *            The most recent volume number
 	 * 
 	 * @return String range of latest volume
 	 */
