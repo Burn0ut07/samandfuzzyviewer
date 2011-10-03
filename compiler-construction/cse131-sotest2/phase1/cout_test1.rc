@@ -1,0 +1,5 @@
+function : int main(){
+  cout << 3.0 << endl << true << endl << 3.2 << endl << false << endl << 3.4 << endl << 4 <<endl;
+  cout << "hello " << "world"<< '!' << endl;
+  return 0;
+}
